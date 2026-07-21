@@ -1,0 +1,671 @@
+[
+  {
+    "id": "crag-text-test-002",
+    "gold_query": "Who stepped down as Apple's CEO in August 2011?",
+    "query_time": "03/10/2024, 23:01:12 PT",
+    "gold_answer": "Steve Jobs",
+    "alt_answers": [],
+    "question_type": "simple_w_condition",
+    "dynamism": "static",
+    "endpoint_text": "who stepped down as Apple's CEO in August 2011.",
+    "stabilized_trace": [
+      {
+        "offset_ms": 1500.0,
+        "text": "who stepped down as",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2500.0,
+        "text": "who stepped down as Apple's CEO in",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3000.0,
+        "text": "who stepped down as Apple's CEO in August 2011.",
+        "is_final": true
+      }
+    ],
+    "correction_metrics": {
+      "raw_transitions": 5,
+      "raw_correction_rate": 0.8,
+      "stab_transitions": 2,
+      "stab_correction_rate": 0.0,
+      "emitted_snapshots": 3
+    }
+  },
+  {
+    "id": "crag-text-test-003",
+    "gold_query": "Which film had the larger domestic opening weekend: Harry Potter and the Half-Blood Prince or Harry Potter and the Deathly Hallows \u2013 Part 2?",
+    "query_time": "03/10/2024, 23:35:12 PT",
+    "gold_answer": "Harry Potter and the Deathly Hallows \u2013 Part 2",
+    "alt_answers": [
+      "Harry Potter and the Deathly Hallows: Part 2",
+      "Deathly Hallows Part 2"
+    ],
+    "question_type": "comparison",
+    "dynamism": "static",
+    "endpoint_text": "Which film had the larger domestic opening weekend, Harry Potter and the Half-Blood Prince,  or Harry Potter and the Deathly Hallows? Part 2.  //",
+    "stabilized_trace": [
+      {
+        "offset_ms": 1000.0,
+        "text": "Which",
+        "is_final": false
+      },
+      {
+        "offset_ms": 1500.0,
+        "text": "Which film had the",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2000.0,
+        "text": "Which film had the larger",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2500.0,
+        "text": "Which film had the larger domestic opening",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3000.0,
+        "text": "Which film had the larger domestic opening weekend?",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3500.0,
+        "text": "Which film had the larger domestic opening weekend? Harry Potter",
+        "is_final": false
+      },
+      {
+        "offset_ms": 4000.0,
+        "text": "Which film had the larger domestic opening",
+        "is_final": false
+      },
+      {
+        "offset_ms": 4500.0,
+        "text": "Which film had the larger domestic opening weekend, Harry Potter and the Half-Blood",
+        "is_final": false
+      },
+      {
+        "offset_ms": 5500.0,
+        "text": "Which film had the larger domestic opening weekend, Harry Potter and the Half-Blood Prince, or Harry Potter and",
+        "is_final": false
+      },
+      {
+        "offset_ms": 6000.0,
+        "text": "Which film had the larger domestic opening weekend, Harry Potter and the Half-Blood Prince, or Harry Potter and the Deathly",
+        "is_final": false
+      },
+      {
+        "offset_ms": 6500.0,
+        "text": "Which film had the larger domestic opening weekend, Harry Potter and the Half-Blood Prince, or Harry Potter and the Deathly Hallows?",
+        "is_final": false
+      },
+      {
+        "offset_ms": 7000.0,
+        "text": "Which film had the larger domestic opening weekend, Harry Potter and the Half-Blood Prince,  or Harry Potter and the Deathly Hallows? Part 2.  //",
+        "is_final": true
+      }
+    ],
+    "correction_metrics": {
+      "raw_transitions": 13,
+      "raw_correction_rate": 0.6923,
+      "stab_transitions": 11,
+      "stab_correction_rate": 0.1818,
+      "emitted_snapshots": 12
+    }
+  },
+  {
+    "id": "crag-text-test-004",
+    "gold_query": "which actress won an academy award for her role in \"black swan\"?",
+    "query_time": "03/12/2024, 12:26:14 PT",
+    "gold_answer": "Natalie Portman",
+    "alt_answers": [],
+    "question_type": "simple",
+    "dynamism": "slow-changing",
+    "endpoint_text": "which actress won an Academy Award for her role in Black Swan.  //",
+    "stabilized_trace": [
+      {
+        "offset_ms": 1000.0,
+        "text": "Which",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2000.0,
+        "text": "which actress won an",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2500.0,
+        "text": "which actress won an Academy",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3000.0,
+        "text": "which actress won an Academy Award for her",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3500.0,
+        "text": "which actress won an Academy Award for her role in",
+        "is_final": false
+      },
+      {
+        "offset_ms": 4000.0,
+        "text": "which actress won an Academy Award for her role in Black Swan.  //",
+        "is_final": true
+      }
+    ],
+    "correction_metrics": {
+      "raw_transitions": 7,
+      "raw_correction_rate": 0.7143,
+      "stab_transitions": 5,
+      "stab_correction_rate": 0.2,
+      "emitted_snapshots": 6
+    }
+  },
+  {
+    "id": "crag-text-test-005",
+    "gold_query": "what album did the killers release in 2004, which included the songs \"mr. brightside\" and \"jenny was a friend of mine\"?",
+    "query_time": "03/13/2024, 09:49:13 PT",
+    "gold_answer": "Hot Fuss",
+    "alt_answers": [
+      "the album Hot Fuss",
+      "The Killers released the album \"Hot Fuss\" in 2004, which included the songs \"Mr. Brightside\" and \"Jenny Was a Friend of Mine\"."
+    ],
+    "question_type": "simple_w_condition",
+    "dynamism": "static",
+    "endpoint_text": "What album did the killer's release in 2004, which included the songs, Mr. Brightside, and Jenny was a friend of mine.",
+    "stabilized_trace": [
+      {
+        "offset_ms": 1000.0,
+        "text": "What",
+        "is_final": false
+      },
+      {
+        "offset_ms": 1500.0,
+        "text": "What album did the",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2500.0,
+        "text": "What album did the killer's release in",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3500.0,
+        "text": "What album did the killer's release in 2004, which included",
+        "is_final": false
+      },
+      {
+        "offset_ms": 4000.0,
+        "text": "What album did the killer's release in 2004, which included the",
+        "is_final": false
+      },
+      {
+        "offset_ms": 4500.0,
+        "text": "What album did the killer's release in 2004, which included the songs, Mr.",
+        "is_final": false
+      },
+      {
+        "offset_ms": 5500.0,
+        "text": "What album did the killer's release in 2004, which included the songs, Mr. Brightside, and",
+        "is_final": false
+      },
+      {
+        "offset_ms": 6000.0,
+        "text": "What album did the killer's release in 2004, which included the songs, Mr. Brightside, and Jenny was",
+        "is_final": false
+      },
+      {
+        "offset_ms": 6500.0,
+        "text": "What album did the killer's release in 2004, which included the songs, Mr. Brightside, and Jenny was a friend of mine.",
+        "is_final": true
+      }
+    ],
+    "correction_metrics": {
+      "raw_transitions": 12,
+      "raw_correction_rate": 1.0,
+      "stab_transitions": 8,
+      "stab_correction_rate": 0.0,
+      "emitted_snapshots": 9
+    }
+  },
+  {
+    "id": "crag-text-test-006",
+    "gold_query": "what album did kings of leon release in 2013, which included the songs \"wait for me\" and \"family tree\"?",
+    "query_time": "03/13/2024, 09:49:35 PT",
+    "gold_answer": "Mechanical Bull",
+    "alt_answers": [
+      "the album Mechanical Bull",
+      "Kings of Leon released the album \"Mechanical Bull\" in 2013, which included the songs \"Wait for Me\" and \"Family Tree\"."
+    ],
+    "question_type": "simple_w_condition",
+    "dynamism": "static",
+    "endpoint_text": "What album did Kings of Leon release in 2013, which included the songs Wait for Me and Family Tree?  //",
+    "stabilized_trace": [
+      {
+        "offset_ms": 1000.0,
+        "text": "What",
+        "is_final": false
+      },
+      {
+        "offset_ms": 1500.0,
+        "text": "What album did",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2000.0,
+        "text": "What album did Kings of",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2500.0,
+        "text": "What album did Kings of Leon",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3000.0,
+        "text": "What album did Kings of Leon release in",
+        "is_final": false
+      },
+      {
+        "offset_ms": 4000.0,
+        "text": "What album did Kings of Leon release in 2013,",
+        "is_final": false
+      },
+      {
+        "offset_ms": 4500.0,
+        "text": "What album did Kings of Leon release in 2013, which included the",
+        "is_final": false
+      },
+      {
+        "offset_ms": 5000.0,
+        "text": "What album did Kings of Leon release in 2013, which included the songs",
+        "is_final": false
+      },
+      {
+        "offset_ms": 5500.0,
+        "text": "What album did Kings of Leon release in 2013, which included the songs Wait for",
+        "is_final": false
+      },
+      {
+        "offset_ms": 6000.0,
+        "text": "What album did Kings of Leon release in 2013, which included the songs Wait for Me and",
+        "is_final": false
+      },
+      {
+        "offset_ms": 6500.0,
+        "text": "What album did Kings of Leon release in 2013, which included the songs Wait for Me and Family Tree?  //",
+        "is_final": true
+      }
+    ],
+    "correction_metrics": {
+      "raw_transitions": 12,
+      "raw_correction_rate": 0.9167,
+      "stab_transitions": 10,
+      "stab_correction_rate": 0.0,
+      "emitted_snapshots": 11
+    }
+  },
+  {
+    "id": "crag-text-test-007",
+    "gold_query": "what is the most active volcano in the philippines?",
+    "query_time": "03/17/2024, 16:31:28 PT",
+    "gold_answer": "Mayon Volcano",
+    "alt_answers": [
+      "Mayon"
+    ],
+    "question_type": "simple_w_condition",
+    "dynamism": "slow-changing",
+    "endpoint_text": "What is the most active volcano in the Philippines?",
+    "stabilized_trace": [
+      {
+        "offset_ms": 1000.0,
+        "text": "What is",
+        "is_final": false
+      },
+      {
+        "offset_ms": 1500.0,
+        "text": "What is the most",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2000.0,
+        "text": "What is the most active",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2500.0,
+        "text": "What is the most active volcano in the",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3000.0,
+        "text": "What is the most active volcano in the Philippines?",
+        "is_final": true
+      }
+    ],
+    "correction_metrics": {
+      "raw_transitions": 5,
+      "raw_correction_rate": 0.6,
+      "stab_transitions": 4,
+      "stab_correction_rate": 0.0,
+      "emitted_snapshots": 5
+    }
+  },
+  {
+    "id": "crag-text-test-008",
+    "gold_query": "what are the names of george and amal clooney's twins?",
+    "query_time": "03/10/2024, 21:35:29 PT",
+    "gold_answer": "Ella and Alexander Clooney",
+    "alt_answers": [
+      "Ella and Alexander"
+    ],
+    "question_type": "set",
+    "dynamism": "static",
+    "endpoint_text": "What are the names of George and Amal Clooney's twins?",
+    "stabilized_trace": [
+      {
+        "offset_ms": 1000.0,
+        "text": "What are",
+        "is_final": false
+      },
+      {
+        "offset_ms": 1500.0,
+        "text": "What are the names",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2000.0,
+        "text": "What are the names of",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2500.0,
+        "text": "What are the names of George and",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3000.0,
+        "text": "What are the names of George and Amal Clooney's",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3500.0,
+        "text": "What are the names of George and Amal Clooney's twins?",
+        "is_final": true
+      }
+    ],
+    "correction_metrics": {
+      "raw_transitions": 6,
+      "raw_correction_rate": 0.8333,
+      "stab_transitions": 5,
+      "stab_correction_rate": 0.0,
+      "emitted_snapshots": 6
+    }
+  },
+  {
+    "id": "crag-text-test-009",
+    "gold_query": "As of March 2024, what NFL teams had never made the Super Bowl?",
+    "query_time": "03/10/2024, 21:46:44 PT",
+    "gold_answer": "Cleveland Browns, Detroit Lions, Houston Texans, and Jacksonville Jaguars",
+    "alt_answers": [
+      "Browns, Lions, Texans, and Jaguars",
+      "Browns, Lions, Jaguars, Texans"
+    ],
+    "question_type": "set",
+    "dynamism": "slow-changing",
+    "endpoint_text": "As of March 2024, what NFL teams had never made the Super Bowl?  //",
+    "stabilized_trace": [
+      {
+        "offset_ms": 1000.0,
+        "text": "As of",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2500.0,
+        "text": "As of March 2024,",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3000.0,
+        "text": "As of March 2024, what",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3500.0,
+        "text": "As of March 2024, what NFL teams had",
+        "is_final": false
+      },
+      {
+        "offset_ms": 4000.0,
+        "text": "As of March 2024, what NFL teams had never made the",
+        "is_final": false
+      },
+      {
+        "offset_ms": 4500.0,
+        "text": "As of March 2024, what NFL teams had never made the Super Bowl?  //",
+        "is_final": true
+      }
+    ],
+    "correction_metrics": {
+      "raw_transitions": 8,
+      "raw_correction_rate": 0.625,
+      "stab_transitions": 5,
+      "stab_correction_rate": 0.0,
+      "emitted_snapshots": 6
+    }
+  },
+  {
+    "id": "crag-text-test-010",
+    "gold_query": "who are the three players with the most home runs in major league baseball history as of 2022?",
+    "query_time": "03/13/2024, 09:23:43 PT",
+    "gold_answer": "Barry Bonds, Hank Aaron, and Babe Ruth",
+    "alt_answers": [
+      "Barry Bonds, Hank Aaron, Babe Ruth",
+      "As of 2022, Barry Bonds, Hank Aaron, and Babe Ruth are the top three players with the most home runs in Major League Baseball history."
+    ],
+    "question_type": "set",
+    "dynamism": "static",
+    "endpoint_text": "Who are the three players with the most home runs and major league baseball history as of 2022?  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //",
+    "stabilized_trace": [
+      {
+        "offset_ms": 1000.0,
+        "text": "Who are",
+        "is_final": false
+      },
+      {
+        "offset_ms": 1500.0,
+        "text": "Who are the",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2000.0,
+        "text": "Who are the three",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2500.0,
+        "text": "Who are the three players with the most",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3000.0,
+        "text": "Who are the three players with the most home",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3500.0,
+        "text": "Who are the three players with the most home runs in",
+        "is_final": false
+      },
+      {
+        "offset_ms": 4500.0,
+        "text": "Who are the three players with the most home runs",
+        "is_final": false
+      },
+      {
+        "offset_ms": 5000.0,
+        "text": "Who are the three players with the most home runs and major league baseball history as of",
+        "is_final": false
+      },
+      {
+        "offset_ms": 5500.0,
+        "text": "Who are the three players with the most home runs and major league baseball history as of 2022?  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //",
+        "is_final": true
+      }
+    ],
+    "correction_metrics": {
+      "raw_transitions": 10,
+      "raw_correction_rate": 0.8,
+      "stab_transitions": 8,
+      "stab_correction_rate": 0.125,
+      "emitted_snapshots": 9
+    }
+  },
+  {
+    "id": "crag-text-dev-001",
+    "gold_query": "how long does a stock need to be held to make capital gains long term?",
+    "query_time": "03/12/2024, 12:24:41 PT",
+    "gold_answer": "more than one year",
+    "alt_answers": [
+      "over one year",
+      "longer than one year"
+    ],
+    "question_type": "simple",
+    "dynamism": "static",
+    "endpoint_text": "How long does a stock need to be held to make capital gains long-term?",
+    "stabilized_trace": [
+      {
+        "offset_ms": 1500.0,
+        "text": "How long does",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2000.0,
+        "text": "How long does a stock need to be",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3000.0,
+        "text": "How long does a stock need to be held to make",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3500.0,
+        "text": "How long does a stock need to be held to make capital gains",
+        "is_final": false
+      },
+      {
+        "offset_ms": 4000.0,
+        "text": "How long does a stock need to be held to make capital gains long-term?",
+        "is_final": true
+      }
+    ],
+    "correction_metrics": {
+      "raw_transitions": 7,
+      "raw_correction_rate": 0.8571,
+      "stab_transitions": 4,
+      "stab_correction_rate": 0.0,
+      "emitted_snapshots": 5
+    }
+  },
+  {
+    "id": "crag-text-dev-002",
+    "gold_query": "which dune movie has better music, 1984 or 2021?",
+    "query_time": "03/05/2024, 23:30:20 PT",
+    "gold_answer": "Dune (2021)",
+    "alt_answers": [
+      "the 2021 Dune",
+      "Dune 2021",
+      "the music for Dune 2021 is more striking"
+    ],
+    "question_type": "comparison",
+    "dynamism": "static",
+    "endpoint_text": "Which Dune movie has better music, 1984 or 2021?",
+    "stabilized_trace": [
+      {
+        "offset_ms": 1000.0,
+        "text": "which",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2500.0,
+        "text": "Which Dune movie has better music?",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3000.0,
+        "text": "Which Dune movie has better",
+        "is_final": false
+      },
+      {
+        "offset_ms": 3500.0,
+        "text": "Which Dune movie has better music, 1984 or",
+        "is_final": false
+      },
+      {
+        "offset_ms": 4000.0,
+        "text": "Which Dune movie has better music, 1984 or 2021?",
+        "is_final": true
+      }
+    ],
+    "correction_metrics": {
+      "raw_transitions": 6,
+      "raw_correction_rate": 0.6667,
+      "stab_transitions": 4,
+      "stab_correction_rate": 0.5,
+      "emitted_snapshots": 5
+    }
+  },
+  {
+    "id": "crag-text-dev-004",
+    "gold_query": "Was Taylor Swift's debut album Fearless, released in the United States in 2008?",
+    "query_time": "03/17/2024, 16:43:11 PT",
+    "gold_answer": "invalid question",
+    "alt_answers": [],
+    "question_type": "false_premise",
+    "dynamism": "static",
+    "endpoint_text": "Was Taylor Swift's debut album Fearless, released in the United States in 2008?",
+    "stabilized_trace": [
+      {
+        "offset_ms": 1000.0,
+        "text": "Was",
+        "is_final": false
+      },
+      {
+        "offset_ms": 1500.0,
+        "text": "Was Taylor Swift's",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2000.0,
+        "text": "Was Taylor Swift's debut",
+        "is_final": false
+      },
+      {
+        "offset_ms": 2500.0,
+        "text": "Was Taylor Swift's debut album",
+        "is_final": false
+      },
+      {
+        "offset_ms": 4500.0,
+        "text": "Was Taylor Swift's debut album Fearless, released in the United States in",
+        "is_final": false
+      },
+      {
+        "offset_ms": 5000.0,
+        "text": "Was Taylor Swift's debut album Fearless, released in the United States in 2008?",
+        "is_final": true
+      }
+    ],
+    "correction_metrics": {
+      "raw_transitions": 9,
+      "raw_correction_rate": 0.7778,
+      "stab_transitions": 5,
+      "stab_correction_rate": 0.0,
+      "emitted_snapshots": 6
+    }
+  }
+]

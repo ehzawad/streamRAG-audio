@@ -1,0 +1,9 @@
+{
+  "approval_status": "candidate_pending_human_review",
+  "cross_split_query_near_duplicates_at_0_85": [],
+  "exact_query_strings_found_as_natural_document_content": {},
+  "forbidden_query_or_label_wrapper_fields_in_documents": [],
+  "note": "Natural page text may contain a question string; no query, answer, split, or gold wrapper field is written to the retrievable corpus. Test golds remain scorer-only.",
+  "status": "pass",
+  "test_label_keys_exposed_in_test_queries": []
+}

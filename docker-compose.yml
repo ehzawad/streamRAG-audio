@@ -1,0 +1,133 @@
+name: streamrag
+
+services:
+  qdrant-naive:
+    image: qdrant/qdrant:v1.18.3-unprivileged@sha256:affb67e1d6f2f93d7d20b90d238a7d4b974d36351c162e73bda794e4b2e03483
+    restart: unless-stopped
+    environment:
+      QDRANT__TELEMETRY_DISABLED: "true"
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 2 bash -c '</dev/tcp/127.0.0.1/6333'"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+      start_period: 5s
+    volumes:
+      - naive-qdrant:/qdrant/storage
+    networks:
+      - naive-data
+
+  naive:
+    build:
+      context: .
+      dockerfile: naive/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ALLOW_UNREVIEWED_DATASET: ${ALLOW_UNREVIEWED_DATASET:-0}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
+      QDRANT_URL: http://qdrant-naive:6333
+      QDRANT_API_KEY: ""
+      RUNTIME_DB: /app/var/runtime.sqlite3
+      METRICS_LOG: /app/var/requests.jsonl
+    depends_on:
+      qdrant-naive:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/app/.venv/bin/python", "-c", "import json,sys,urllib.request; sys.exit(0 if json.load(urllib.request.urlopen('http://127.0.0.1:8001/v1/health', timeout=2)).get('ok') else 1)"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+    ports:
+      - "127.0.0.1:8001:8001"
+    volumes:
+      - naive-runtime:/app/var
+    networks:
+      - edge
+      - naive-data
+
+  qdrant-stream:
+    image: qdrant/qdrant:v1.18.3-unprivileged@sha256:affb67e1d6f2f93d7d20b90d238a7d4b974d36351c162e73bda794e4b2e03483
+    restart: unless-stopped
+    environment:
+      QDRANT__TELEMETRY_DISABLED: "true"
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 2 bash -c '</dev/tcp/127.0.0.1/6333'"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+      start_period: 5s
+    volumes:
+      - stream-qdrant:/qdrant/storage
+    networks:
+      - stream-data
+
+  stream:
+    build:
+      context: .
+      dockerfile: stream/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ALLOW_UNREVIEWED_DATASET: ${ALLOW_UNREVIEWED_DATASET:-0}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
+      QDRANT_URL: http://qdrant-stream:6333
+      QDRANT_API_KEY: ""
+      RUNTIME_DB: /app/var/runtime.sqlite3
+      METRICS_LOG: /app/var/requests.jsonl
+    depends_on:
+      qdrant-stream:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/app/.venv/bin/python", "-c", "import json,sys,urllib.request; sys.exit(0 if json.load(urllib.request.urlopen('http://127.0.0.1:8002/v1/health', timeout=2)).get('ok') else 1)"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+    ports:
+      - "127.0.0.1:8002:8002"
+    volumes:
+      - stream-runtime:/app/var
+    networks:
+      - edge
+      - stream-data
+
+  frontend:
+    build:
+      context: frontend
+    restart: unless-stopped
+    depends_on:
+      naive:
+        condition: service_healthy
+      stream:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --output-document=- http://127.0.0.1/healthz >/dev/null"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+    ports:
+      - "127.0.0.1:5173:80"
+    networks:
+      - edge
+
+volumes:
+  naive-qdrant:
+  naive-runtime:
+  stream-qdrant:
+  stream-runtime:
+
+networks:
+  edge:
+  naive-data:
+    internal: true
+  stream-data:
+    internal: true

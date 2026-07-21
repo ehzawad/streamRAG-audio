@@ -1,0 +1,17 @@
+# Audio front-end + eval stack for streamRAG-audio.
+# Installed in a SEPARATE venv (e.g. .venv-audio) — NOT the main py3.14 RAG venv,
+# and NEVER co-resident with the answer LLM on the A5000. Pins match the proven
+# omni-voice-lab .venv-modular stack on this box.
+#
+#   python3.12 -m venv .venv-audio && . .venv-audio/bin/activate
+#   pip install -r requirements-audio.txt
+#
+# TTS synthesis (Chatterbox) is GPU-sole-tenant and offline; streaming ASR
+# (faster-whisper) is CPU int8. Both write to data/audio_crag/ (wav gitignored).
+
+torch==2.6.0
+chatterbox-tts==0.1.7      # English TTS: synthesize spoken CRAG queries (offline, seeded)
+faster-whisper==1.2.1      # streaming ASR: 500 ms rolling partial hypotheses (CPU int8)
+jiwer>=3.0                 # WER / entity-WER of synthetic audio vs gold text
+soundfile>=0.12            # deterministic wav I/O
+numpy>=1.26,<3

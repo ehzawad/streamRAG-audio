@@ -1,0 +1,47 @@
+streamRAG-audio
+Copyright 2026 ehzawad
+
+A single-A5000 cascaded emulation of the *Model-Triggered Streaming RAG* control
+policy from the Stream RAG paper (Arora et al., Meta + CMU, arXiv:2510.02044),
+applied to spoken CRAG queries. It reuses this author's own prior work:
+  - StreamRAG        https://github.com/ehzawad/streamRAG        (typed streaming RAG)
+  - streamrag-local  https://github.com/ehzawad/streamrag-local  (fully-local variant; this repo's base)
+  - omni-voice-lab   https://github.com/ehzawad/omni-voice-lab   (Silero-VAD turn/barge-in logic, demo only)
+The MIT license above covers the source code in this repository.
+
+What this is NOT (honest scope — see docs/AUDIO.md):
+  - NOT a reproduction of the paper's end-to-end speech-in/speech-out model, its
+    audio-conditioned trigger, its joint response post-training, or its web+KG tools.
+  - This reproduces the paper's modality-agnostic *control policy* over a cascade
+    (VAD + faster-whisper + local Qwen3.5-9B + Chatterbox TTS). The reused
+    coordinator revalidates evidence at commit, so it is SAFER-BUT-DIFFERENT from
+    the paper (which trusts the latest tool result); it is not a bit-exact copy.
+
+Third-party components (fetched or run locally; NOT redistributed here):
+  - Qwen3.5-9B                    Apache-2.0        (Alibaba / Qwen)
+  - bge-large-en-v1.5             MIT               (BAAI)
+  - llama.cpp                     MIT               (ggml-org)
+  - Silero VAD                    MIT               (snakers4)         [turn/barge-in demo]
+  - faster-whisper / Whisper      MIT               (SYSTRAN / OpenAI) [streaming ASR]
+  - Chatterbox-TTS                MIT               (Resemble AI)      [query synthesis]
+  - PydanticAI, FastAPI, Qdrant, etc. — see pyproject.toml / requirements-audio.txt
+
+Evaluation data — CRAG (CC BY-NC 4.0, NON-COMMERCIAL):
+  - CRAG — Comprehensive RAG Benchmark (Meta), arXiv:2406.04744,
+    https://github.com/facebookresearch/CRAG
+  - This repository DOES include a small CRAG-derived evaluation subset under
+    data/crag_eval/ (10 sealed test + 5 dev questions, gold answers, and 250
+    curated source pages), inherited from streamrag-local and curated from the
+    official CRAG Task-1/2 development release. It is provided for NON-COMMERCIAL
+    RESEARCH use only, consistent with CRAG's CC BY-NC 4.0 license and with
+    attribution to Meta.
+  - Any spoken audio synthesized from these questions (data/audio_crag/, the
+    "CRAG-TTS-local" set) is a derivative of CRAG and is therefore likewise
+    NON-COMMERCIAL; it is gitignored, not redistributed, and must be regenerated
+    locally. This is a CRAG-style local auto-eval, NOT an official CRAG/KDD
+    leaderboard score, and its absolute numbers are NOT comparable to the paper's
+    (local Qdrant retrieval is not the paper's 100K-document web+KG pipeline).
+
+Model weights and the full CRAG dataset are not distributed as part of this
+repository. No affiliation with or endorsement by the paper's authors, Meta, CMU,
+or any upstream project is implied.

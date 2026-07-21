@@ -1,0 +1,346 @@
+{
+  "items": [
+    {
+      "evidence_covered_in_own_search_pages": true,
+      "exact_supporting_doc_ids": [
+        "crag-global-9d22ffbe3ca22f9a9858bd6e"
+      ],
+      "id": "crag-text-dev-001",
+      "query_curated_from_source": false,
+      "role": "dev",
+      "source_document_ids": [
+        "crag-global-ad04208244c8feaa2c03a6ef",
+        "crag-global-9d22ffbe3ca22f9a9858bd6e",
+        "crag-global-6568a389b4de70c33bf6bb2e",
+        "crag-global-b75c2759ba994c27058edd43"
+      ],
+      "source_interaction_id": "260c5d09-cec1-4792-8438-c5317ae74891",
+      "source_split": 0,
+      "stabilization_class": "early_stabilization",
+      "stabilization_confidence": "low",
+      "stabilization_review_status": "heuristic_pending_manual_review",
+      "word_count": 15
+    },
+    {
+      "evidence_covered_in_own_search_pages": true,
+      "exact_supporting_doc_ids": [
+        "crag-global-046532bde5668fd1929c2408"
+      ],
+      "id": "crag-text-dev-002",
+      "query_curated_from_source": false,
+      "role": "dev",
+      "source_document_ids": [
+        "crag-global-1c2657ef8c8c095a592a36d6",
+        "crag-global-1a8fb63822ceac0ed1eca6af",
+        "crag-global-046532bde5668fd1929c2408",
+        "crag-global-6fa3da53034d0b2533a73712"
+      ],
+      "source_interaction_id": "1ab0e558-0ace-4264-b248-36161677cff9",
+      "source_split": 0,
+      "stabilization_class": "revision_or_ambiguity",
+      "stabilization_confidence": "low",
+      "stabilization_review_status": "heuristic_pending_manual_review",
+      "word_count": 9
+    },
+    {
+      "evidence_covered_in_own_search_pages": true,
+      "exact_supporting_doc_ids": [
+        "crag-global-a6deebaec508edb9daefce6e"
+      ],
+      "id": "crag-text-dev-003",
+      "query_curated_from_source": false,
+      "role": "dev",
+      "source_document_ids": [
+        "crag-global-b8478a1f80a786a35d3f03a6",
+        "crag-global-a6deebaec508edb9daefce6e",
+        "crag-global-32a9aec1a3c2c74dde01e6a6"
+      ],
+      "source_interaction_id": "909fb375-e924-4f8b-8c9d-b39d2402550b",
+      "source_split": 0,
+      "stabilization_class": "early_stabilization",
+      "stabilization_confidence": "low",
+      "stabilization_review_status": "heuristic_pending_manual_review",
+      "word_count": 19
+    },
+    {
+      "evidence_covered_in_own_search_pages": true,
+      "exact_supporting_doc_ids": [
+        "crag-global-bd5b1cb86ab3f862b0ed8803"
+      ],
+      "id": "crag-text-dev-004",
+      "query_curated_from_source": true,
+      "role": "dev",
+      "source_document_ids": [
+        "crag-global-c0a19b72646257de7c40f5f8",
+        "crag-global-e8395d3e93929ce63a6b7f8d",
+        "crag-global-bd5b1cb86ab3f862b0ed8803",
+        "crag-global-d58b11760982ba847ae7913e"
+      ],
+      "source_interaction_id": "7499dee8-9270-4dd1-a2bc-69eaf734d13e",
+      "source_split": 0,
+      "stabilization_class": "late_stabilization",
+      "stabilization_confidence": "low",
+      "stabilization_review_status": "heuristic_pending_manual_review",
+      "word_count": 13
+    },
+    {
+      "evidence_covered_in_own_search_pages": true,
+      "exact_supporting_doc_ids": [
+        "crag-global-a4048eeaa02d759267b94091"
+      ],
+      "id": "crag-text-dev-005",
+      "query_curated_from_source": false,
+      "role": "dev",
+      "source_document_ids": [
+        "crag-global-a4048eeaa02d759267b94091",
+        "crag-global-d52355cb144faeef1a10d1ae",
+        "crag-global-4b9cd8cf1b06299815d856cc",
+        "crag-global-5341f6ae361ec6505935cd76"
+      ],
+      "source_interaction_id": "130aeafb-6a7d-4f5e-8a05-a7293b0fede7",
+      "source_split": 0,
+      "stabilization_class": "early_stabilization",
+      "stabilization_confidence": "low",
+      "stabilization_review_status": "heuristic_pending_manual_review",
+      "word_count": 14
+    },
+    {
+      "evidence_covered_in_own_search_pages": true,
+      "exact_supporting_doc_ids": [
+        "crag-global-0f4db44459e874d9300f90a8"
+      ],
+      "id": "crag-text-test-001",
+      "query_curated_from_source": false,
+      "role": "test",
+      "source_document_ids": [
+        "crag-global-2103c707eb6ac3fe77c5a70b",
+        "crag-global-0f4db44459e874d9300f90a8",
+        "crag-global-b18dd039e3a58c645a996ab3",
+        "crag-global-211473ca915853d31165be58"
+      ],
+      "source_interaction_id": "161a89f3-7a70-4e12-a1a2-7832e098b0a7",
+      "source_split": 1,
+      "stabilization_class": "early_stabilization",
+      "stabilization_confidence": "low",
+      "stabilization_review_status": "heuristic_pending_manual_review",
+      "word_count": 8
+    },
+    {
+      "evidence_covered_in_own_search_pages": true,
+      "exact_supporting_doc_ids": [
+        "crag-global-6e07afd4ce9ef9c61f0c659e"
+      ],
+      "id": "crag-text-test-002",
+      "query_curated_from_source": true,
+      "role": "test",
+      "source_document_ids": [
+        "crag-global-6e07afd4ce9ef9c61f0c659e",
+        "crag-global-0685a52d1097e897e97e7164",
+        "crag-global-d68acdbf2576501a8e9e7af8"
+      ],
+      "source_interaction_id": "c0acc154-593c-43b0-b1d1-d046c6b04349",
+      "source_split": 1,
+      "stabilization_class": "late_stabilization",
+      "stabilization_confidence": "low",
+      "stabilization_review_status": "heuristic_pending_manual_review",
+      "word_count": 9
+    },
+    {
+      "evidence_covered_in_own_search_pages": true,
+      "exact_supporting_doc_ids": [
+        "crag-global-14a3d0579cdfdede70eafa7e"
+      ],
+      "id": "crag-text-test-003",
+      "query_curated_from_source": true,
+      "role": "test",
+      "source_document_ids": [
+        "crag-global-72436b9133a82e9d20d035c1",
+        "crag-global-14a3d0579cdfdede70eafa7e",
+        "crag-global-e449454eb75cbf70e5e2eadf",
+        "crag-global-71b07a7fc42a5d0cab4c8f7f",
+        "crag-global-bebd5dc36492a03f289337d7"
+      ],
+      "source_interaction_id": "8959e8f9-c24a-4a71-9189-89b1fb01053e",
+      "source_split": 1,
+      "stabilization_class": "revision_or_ambiguity",
+      "stabilization_confidence": "low",
+      "stabilization_review_status": "heuristic_pending_manual_review",
+      "word_count": 24
+    },
+    {
+      "evidence_covered_in_own_search_pages": true,
+      "exact_supporting_doc_ids": [
+        "crag-global-4ed5e8a8fb93221e56e3e977"
+      ],
+      "id": "crag-text-test-004",
+      "query_curated_from_source": false,
+      "role": "test",
+      "source_document_ids": [
+        "crag-global-ca72f9395a4a5319d0958a0c",
+        "crag-global-4ed5e8a8fb93221e56e3e977",
+        "crag-global-2460b59d7bdb13c2fff51029",
+        "crag-global-da24a8c507f2504e03e67892"
+      ],
+      "source_interaction_id": "17403d5f-acf7-410a-bee0-5c931cbaeb07",
+      "source_split": 1,
+      "stabilization_class": "early_stabilization",
+      "stabilization_confidence": "low",
+      "stabilization_review_status": "heuristic_pending_manual_review",
+      "word_count": 12
+    },
+    {
+      "evidence_covered_in_own_search_pages": true,
+      "exact_supporting_doc_ids": [
+        "crag-global-980bbdc9e21c1c3d8619078d"
+      ],
+      "id": "crag-text-test-005",
+      "query_curated_from_source": false,
+      "role": "test",
+      "source_document_ids": [
+        "crag-global-c1c1056d9329c4a15198e3ed",
+        "crag-global-42c7d45b0d59ae64cd7b1c79",
+        "crag-global-980bbdc9e21c1c3d8619078d",
+        "crag-global-de254f6b5eacfbb4b7d661a8",
+        "crag-global-b977b740f519a3c48561cee2"
+      ],
+      "source_interaction_id": "bf7d837c-3488-4373-be3d-5ab46a9bc5a1",
+      "source_split": 1,
+      "stabilization_class": "early_stabilization",
+      "stabilization_confidence": "low",
+      "stabilization_review_status": "heuristic_pending_manual_review",
+      "word_count": 21
+    },
+    {
+      "evidence_covered_in_own_search_pages": true,
+      "exact_supporting_doc_ids": [
+        "crag-global-67b771c4dd17ec0e2fc485b6"
+      ],
+      "id": "crag-text-test-006",
+      "query_curated_from_source": false,
+      "role": "test",
+      "source_document_ids": [
+        "crag-global-3ddc7e0f171654e52693a7a8",
+        "crag-global-f8fd1f48e1365cc4eceb8a5b",
+        "crag-global-67b771c4dd17ec0e2fc485b6",
+        "crag-global-e49959d3164a216116fce6ce",
+        "crag-global-b70dca1aa28581af38db419a"
+      ],
+      "source_interaction_id": "f367af85-66c8-4636-89b4-f68bb6277004",
+      "source_split": 1,
+      "stabilization_class": "early_stabilization",
+      "stabilization_confidence": "low",
+      "stabilization_review_status": "heuristic_pending_manual_review",
+      "word_count": 19
+    },
+    {
+      "evidence_covered_in_own_search_pages": true,
+      "exact_supporting_doc_ids": [
+        "crag-global-c0298641c65cc39b09f74477"
+      ],
+      "id": "crag-text-test-007",
+      "query_curated_from_source": false,
+      "role": "test",
+      "source_document_ids": [
+        "crag-global-81386c9867bdb2f885f1b0cd",
+        "crag-global-5a02299e76e6c8a087f0bedf",
+        "crag-global-c0298641c65cc39b09f74477",
+        "crag-global-fa592c99052a3cc3c96c9488"
+      ],
+      "source_interaction_id": "3c2e454d-10a1-40eb-9534-f9440ecc4c3b",
+      "source_split": 1,
+      "stabilization_class": "early_stabilization",
+      "stabilization_confidence": "low",
+      "stabilization_review_status": "heuristic_pending_manual_review",
+      "word_count": 9
+    },
+    {
+      "evidence_covered_in_own_search_pages": true,
+      "exact_supporting_doc_ids": [
+        "crag-global-f3d09c83e3f8c21ca94cbab5"
+      ],
+      "id": "crag-text-test-008",
+      "query_curated_from_source": true,
+      "role": "test",
+      "source_document_ids": [
+        "crag-global-a4b49bacd8f21566ef9b08f9",
+        "crag-global-f3d09c83e3f8c21ca94cbab5",
+        "crag-global-9226bd8d72a271018964a87f",
+        "crag-global-caff856ff7620f9ccfd3e8b6",
+        "crag-global-e7709d32a41bfdf9e2606843"
+      ],
+      "source_interaction_id": "074ec17c-e14b-4671-abb4-51c0b833758d",
+      "source_split": 1,
+      "stabilization_class": "late_stabilization",
+      "stabilization_confidence": "low",
+      "stabilization_review_status": "heuristic_pending_manual_review",
+      "word_count": 10
+    },
+    {
+      "evidence_covered_in_own_search_pages": true,
+      "exact_supporting_doc_ids": [
+        "crag-global-6abd5e9a40b58f788f823cc1"
+      ],
+      "id": "crag-text-test-009",
+      "query_curated_from_source": true,
+      "role": "test",
+      "source_document_ids": [
+        "crag-global-6abd5e9a40b58f788f823cc1",
+        "crag-global-95bcfa3525bec5e9f0a27584",
+        "crag-global-7c4ad1cea66baae0d15ef108",
+        "crag-global-dddf971d8fbcc6df2be48ed0"
+      ],
+      "source_interaction_id": "3183f25b-f868-4352-b605-9158829561d1",
+      "source_split": 1,
+      "stabilization_class": "late_stabilization",
+      "stabilization_confidence": "low",
+      "stabilization_review_status": "heuristic_pending_manual_review",
+      "word_count": 13
+    },
+    {
+      "evidence_covered_in_own_search_pages": true,
+      "exact_supporting_doc_ids": [
+        "crag-global-fc4e1286518d7798eb3ef0a5"
+      ],
+      "id": "crag-text-test-010",
+      "query_curated_from_source": false,
+      "role": "test",
+      "source_document_ids": [
+        "crag-global-fc4e1286518d7798eb3ef0a5",
+        "crag-global-50d423705ab06231f12d45c5",
+        "crag-global-b6942fd603a589e974d483cc"
+      ],
+      "source_interaction_id": "9d6fef40-99f9-4477-abdd-1a9561776d3a",
+      "source_split": 1,
+      "stabilization_class": "late_stabilization",
+      "stabilization_confidence": "low",
+      "stabilization_review_status": "heuristic_pending_manual_review",
+      "word_count": 18
+    }
+  ],
+  "rules": [
+    "official split 0 development and split 1 test",
+    "human-authored web questions only",
+    "at least 8 whitespace-delimited words",
+    "every item has manually audited predicate-level evidence in its own pages",
+    "each audited support page uses at most 20 index points",
+    "one development and two test questions per domain",
+    "selection never uses Naive RAG or StreamRAG outputs",
+    "stabilization classes are assigned only after selection and require review"
+  ],
+  "selection_seed": "fundednext-typed-streamrag-crag-eval",
+  "source": {
+    "characters": 255117738,
+    "curated_source_rows": 15,
+    "duplicate_content_rows": 2850,
+    "expected_sha256": "d4c14897d8ea2f450a24e098b595d8247c6575f996f9869d6f27a020fe020618",
+    "filename": "crag_task_1_and_2_dev_v5.jsonl.bz2",
+    "license": "CC BY-NC 4.0",
+    "name": "crag_task_1_and_2_dev_v5",
+    "official_url": "https://media.githubusercontent.com/media/facebookresearch/CRAG/main/data/crag_task_1_and_2_dev_v5.jsonl.bz2",
+    "page_rows": 13530,
+    "sha256": "d4c14897d8ea2f450a24e098b595d8247c6575f996f9869d6f27a020fe020618",
+    "source_rows": 2706,
+    "unique_documents": 10680,
+    "unique_urls": 9848
+  }
+}

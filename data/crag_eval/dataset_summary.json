@@ -1,0 +1,115 @@
+{
+  "corpus": {
+    "characters": 1372242,
+    "compression": "bzip2",
+    "distractors_replaced_for_point_cap": 85,
+    "documents": 250,
+    "embedding_tokens_with_overlap_upper_bound": 352173,
+    "estimated_index_points": 1000,
+    "filename": "documents.jsonl.bz2",
+    "full_documents_only": true,
+    "global_distractor_documents": 235,
+    "max_index_points": 1000,
+    "query_neighborhood_isolation": false,
+    "selected_evidence_documents": 15,
+    "strategy": "one concise audited evidence page per question plus a fixed-hash full-document sample; largest distractors are replaced with smaller whole pages only as needed to meet the assignment runtime target",
+    "support_documents": 15,
+    "target_documents": 250
+  },
+  "dev": {
+    "domains": {
+      "finance": 1,
+      "movie": 1,
+      "music": 1,
+      "open": 1,
+      "sports": 1
+    },
+    "median_words": 14,
+    "question_types": {
+      "comparison": 1,
+      "false_premise": 1,
+      "multi-hop": 1,
+      "simple": 1,
+      "simple_w_condition": 1
+    },
+    "stabilization_classes": {
+      "early_stabilization": 3,
+      "late_stabilization": 1,
+      "revision_or_ambiguity": 1
+    }
+  },
+  "leakage_audit": {
+    "approval_status": "candidate_pending_human_review",
+    "cross_split_query_near_duplicates_at_0_85": [],
+    "exact_query_strings_found_as_natural_document_content": {},
+    "forbidden_query_or_label_wrapper_fields_in_documents": [],
+    "note": "Natural page text may contain a question string; no query, answer, split, or gold wrapper field is written to the retrievable corpus. Test golds remain scorer-only.",
+    "status": "pass",
+    "test_label_keys_exposed_in_test_queries": []
+  },
+  "selection": {
+    "approval_status": "candidate_pending_human_review",
+    "dataset_id": "crag-text-eval",
+    "dev_questions": 5,
+    "minimum_query_words": 8,
+    "seed": "fundednext-typed-streamrag-crag-eval",
+    "selection_independent_of_path_outputs": true,
+    "selection_method": "fixed manual evidence audit",
+    "speech_latency_excluded": [
+      "ASR",
+      "endpoint detection",
+      "trailing silence"
+    ],
+    "stabilization_class_assigned_after_selection": true,
+    "stabilization_class_confidence": "low",
+    "stabilization_class_status": "heuristic_pending_manual_review",
+    "test_questions": 10,
+    "text_input_contract": {
+      "answer_before_send": false,
+      "commit": "full text at a higher revision",
+      "post_typing_dwell_ms": 5000,
+      "settled_draft_delay_ms": 500,
+      "snapshot_interval_ms": 400,
+      "snapshots": "changed-only cumulative dirty text; unchanged 400 ms ticks emit no snapshot; after 500 ms unchanged, the latest delivered draft starts exact speculative retrieval without generating an answer"
+    }
+  },
+  "source": {
+    "characters": 255117738,
+    "curated_source_rows": 15,
+    "duplicate_content_rows": 2850,
+    "expected_sha256": "d4c14897d8ea2f450a24e098b595d8247c6575f996f9869d6f27a020fe020618",
+    "filename": "crag_task_1_and_2_dev_v5.jsonl.bz2",
+    "license": "CC BY-NC 4.0",
+    "name": "crag_task_1_and_2_dev_v5",
+    "official_url": "https://media.githubusercontent.com/media/facebookresearch/CRAG/main/data/crag_task_1_and_2_dev_v5.jsonl.bz2",
+    "page_rows": 13530,
+    "sha256": "d4c14897d8ea2f450a24e098b595d8247c6575f996f9869d6f27a020fe020618",
+    "source_rows": 2706,
+    "unique_documents": 10680,
+    "unique_urls": 9848
+  },
+  "test": {
+    "domains": {
+      "finance": 2,
+      "movie": 2,
+      "music": 2,
+      "open": 2,
+      "sports": 2
+    },
+    "gold_file_is_scorer_only": true,
+    "median_words": 12.5,
+    "question_types": {
+      "comparison": 1,
+      "multi-hop": 1,
+      "set": 3,
+      "simple": 1,
+      "simple_w_condition": 4
+    },
+    "stabilization_classes": {
+      "early_stabilization": 5,
+      "late_stabilization": 4,
+      "revision_or_ambiguity": 1
+    },
+    "supporting_doc_ids_recorded_in_gold": true
+  }
+}

@@ -1,0 +1,908 @@
+{
+  "dataset": "CRAG-TTS-local: 9 test + 3 dev kept (WER<=0.10); 3 excluded; NOT the paper's AudioCRAG; synthetic single-voice TTS",
+  "truthfulness": {
+    "all": {
+      "closed_book": {
+        "n": 12,
+        "correct": 8,
+        "incorrect": 3,
+        "missing": 1,
+        "accuracy": 0.6667,
+        "incorrect_rate": 0.25,
+        "truthfulness": 0.4167,
+        "truthfulness_ci95": [
+          -0.0833,
+          0.8333
+        ]
+      },
+      "naive": {
+        "n": 12,
+        "correct": 11,
+        "incorrect": 0,
+        "missing": 1,
+        "accuracy": 0.9167,
+        "incorrect_rate": 0.0,
+        "truthfulness": 0.9167,
+        "truthfulness_ci95": [
+          0.75,
+          1.0
+        ]
+      },
+      "stream": {
+        "n": 12,
+        "correct": 11,
+        "incorrect": 0,
+        "missing": 1,
+        "accuracy": 0.9167,
+        "incorrect_rate": 0.0,
+        "truthfulness": 0.9167,
+        "truthfulness_ci95": [
+          0.75,
+          1.0
+        ]
+      }
+    },
+    "test": {
+      "closed_book": {
+        "n": 9,
+        "correct": 6,
+        "incorrect": 2,
+        "missing": 1,
+        "accuracy": 0.6667,
+        "incorrect_rate": 0.2222,
+        "truthfulness": 0.4444,
+        "truthfulness_ci95": [
+          -0.1111,
+          1.0
+        ]
+      },
+      "naive": {
+        "n": 9,
+        "correct": 8,
+        "incorrect": 0,
+        "missing": 1,
+        "accuracy": 0.8889,
+        "incorrect_rate": 0.0,
+        "truthfulness": 0.8889,
+        "truthfulness_ci95": [
+          0.6667,
+          1.0
+        ]
+      },
+      "stream": {
+        "n": 9,
+        "correct": 8,
+        "incorrect": 0,
+        "missing": 1,
+        "accuracy": 0.8889,
+        "incorrect_rate": 0.0,
+        "truthfulness": 0.8889,
+        "truthfulness_ci95": [
+          0.6667,
+          1.0
+        ]
+      }
+    },
+    "dev": {
+      "closed_book": {
+        "n": 3,
+        "correct": 2,
+        "incorrect": 1,
+        "missing": 0,
+        "accuracy": 0.6667,
+        "incorrect_rate": 0.3333,
+        "truthfulness": 0.3333,
+        "truthfulness_ci95": [
+          -1.0,
+          1.0
+        ]
+      },
+      "naive": {
+        "n": 3,
+        "correct": 3,
+        "incorrect": 0,
+        "missing": 0,
+        "accuracy": 1.0,
+        "incorrect_rate": 0.0,
+        "truthfulness": 1.0,
+        "truthfulness_ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "stream": {
+        "n": 3,
+        "correct": 3,
+        "incorrect": 0,
+        "missing": 0,
+        "accuracy": 1.0,
+        "incorrect_rate": 0.0,
+        "truthfulness": 1.0,
+        "truthfulness_ci95": [
+          1.0,
+          1.0
+        ]
+      }
+    }
+  },
+  "latency": {
+    "n_pairs": 12,
+    "reps": 2,
+    "paired_median_stream_minus_naive_ms": 898.5,
+    "paired_mean_stream_minus_naive_ms": 865.4,
+    "stream_win_rate": 0.167,
+    "speculation_landed_rate": 0.0,
+    "streaming_benefit_demonstrated": false
+  },
+  "rows": [
+    {
+      "id": "crag-text-test-002",
+      "split": "test",
+      "rep": 0,
+      "naive_first": true,
+      "closed_book": {
+        "answer": "Steve Jobs",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "Steve Jobs stepped down as Apple's CEO in August 2011. This is confirmed by multiple sources in the provided evidence, which state that in August 2011, Steve Jobs stepped down as CEO after 14 years, and Tim Cook succeeded him.",
+        "ttft_ms": 594.2
+      },
+      "stream": {
+        "answer": "Steve Jobs stepped down as Apple's CEO in August 2011. This is confirmed by multiple sources in the provided evidence, which state that in August 2011, Steve Jobs stepped down as CEO after 14 years, and Tim Cook succeeded him.",
+        "ttft_ms": 1587.8,
+        "snapshots_accepted": 2,
+        "snapshots_posted": 2,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 1
+        }
+      },
+      "labels": {
+        "closed_book": "correct",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-test-003",
+      "split": "test",
+      "rep": 0,
+      "naive_first": false,
+      "closed_book": {
+        "answer": "Harry Potter and the Deathly Hallows: Part 2",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "Harry Potter and the Deathly Hallows: Part 2 had the larger domestic opening weekend. According to the evidence, Deathly Hallows: Part 2 had the biggest domestic opening weekend of the entire Harry Potter franchise, surpassing Harry Potter and the Half-Blood Prince. [crag-global-14a3d0579cdfdede70eafa7e::c0001]",
+        "ttft_ms": 499.2
+      },
+      "stream": {
+        "answer": "Harry Potter and the Deathly Hallows: Part 2 had the larger domestic opening weekend. According to the evidence, Deathly Hallows: Part 2 had the biggest domestic opening weekend of the entire Harry Potter franchise, surpassing Harry Potter and the Half-Blood Prince. [crag-global-14a3d0579cdfdede70eafa7e::c0001]",
+        "ttft_ms": 2012.6,
+        "snapshots_accepted": 11,
+        "snapshots_posted": 11,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 6
+        }
+      },
+      "labels": {
+        "closed_book": "correct",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-test-004",
+      "split": "test",
+      "rep": 0,
+      "naive_first": true,
+      "closed_book": {
+        "answer": "Natalie Portman",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "Natalie Portman won the Academy Award for Best Actress for her role in Black Swan. She received the award at the 2011 Oscars for her performance as the lead in the psychological horror film based in the world of ballet. She was nominated ahead of other actresses including Annette Bening and Nicole Kidman.",
+        "ttft_ms": 1060.9
+      },
+      "stream": {
+        "answer": "Natalie Portman won the Academy Award for Best Actress for her role in Black Swan. She received the award at the 2011 Oscars for her performance as the lead in the psychological horror film based in the world of ballet. She was nominated ahead of other actresses including Annette Bening and Nicole Kidman.",
+        "ttft_ms": 835.4,
+        "snapshots_accepted": 5,
+        "snapshots_posted": 5,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 2
+        }
+      },
+      "labels": {
+        "closed_book": "correct",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-test-005",
+      "split": "test",
+      "rep": 0,
+      "naive_first": false,
+      "closed_book": {
+        "answer": "Killers' album \"Hot Fuss\" was released in 2004 and includes the songs \"Mr. Brightside\" and \"Jenny Was a Friend of Mine.\"",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "The album released by The Killers in 2004 that includes the songs \"Mr. Brightside\" and \"Jenny Was a Friend of Mine\" is Hot Fuss. This was their debut album, released in 2004, and it reached #1 in both the UK and Australia. The album was certified 3x Platinum in Canada by the CRIA on October 17, 2005.",
+        "ttft_ms": 536.7
+      },
+      "stream": {
+        "answer": "The album released by The Killers in 2004 that includes the songs \"Mr. Brightside\" and \"Jenny Was a Friend of Mine\" is Hot Fuss. This was their debut album, released in 2004, and it reached #1 in both the UK and Australia. The album was certified 3x Platinum in Canada by the CRIA on October 17, 2005.",
+        "ttft_ms": 3290.4,
+        "snapshots_accepted": 8,
+        "snapshots_posted": 8,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 4
+        }
+      },
+      "labels": {
+        "closed_book": "correct",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-test-006",
+      "split": "test",
+      "rep": 0,
+      "naive_first": true,
+      "closed_book": {
+        "answer": "Machine Gun.",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "Kings of Leon released the album Mechanical Bull in 2013, which included the songs \"Wait for Me\" and \"Family Tree.\" This was their sixth studio album, noted for being breezier and less labored than their previous work, Come Around Sundown. The album features other tracks like \"Rock City\" and \"Coming Back Again,\" and it was fronted by the lead single \"Supersoaker.\"",
+        "ttft_ms": 967.4
+      },
+      "stream": {
+        "answer": "Kings of Leon released the album Mechanical Bull in 2013, which included the songs \"Wait for Me\" and \"Family Tree.\" This was their sixth studio album, noted for being breezier and less labored than their previous work, Come Around Sundown. The album features other tracks like \"Rock City\" and \"Coming Back Again,\" and it was fronted by the lead single \"Supersoaker.\"",
+        "ttft_ms": 2249.9,
+        "snapshots_accepted": 10,
+        "snapshots_posted": 10,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 4
+        }
+      },
+      "labels": {
+        "closed_book": "incorrect",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-test-007",
+      "split": "test",
+      "rep": 0,
+      "naive_first": false,
+      "closed_book": {
+        "answer": "Mayon Volcano",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "According to the Philippine Institute of Volcanology and Seismology (PHIVOLCS), the most active volcano in the Philippines is Mt. Mayon. It is located in the province of Albay in the Bicol region and is known for its almost perfect conical shape. Mt. Mayon has erupted at least 47 times in the last 500 years, with the 1814 eruption being the most destructive, burying the town of Cagsawa and killing over a thousand people. PHIVOLCS permanently monitors Mt. Mayon, and activities have been observed over the years, including a surprise eruption in 2013 that killed 5 climbers.",
+        "ttft_ms": 503.7
+      },
+      "stream": {
+        "answer": "According to the Philippine Institute of Volcanology and Seismology (PHIVOLCS), the most active volcano in the Philippines is Mt. Mayon. It is located in the province of Albay in the Bicol region and is known for its almost perfect conical shape. Mt. Mayon has erupted at least 47 times in the last 500 years, with the 1814 eruption being the most destructive, burying the town of Cagsawa and killing over a thousand people. PHIVOLCS permanently monitors Mt. Mayon, and activities have been observed over the years, including a surprise eruption in 2013 that killed 5 climbers.",
+        "ttft_ms": 1945.9,
+        "snapshots_accepted": 4,
+        "snapshots_posted": 4,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 1
+        }
+      },
+      "labels": {
+        "closed_book": "correct",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-test-008",
+      "split": "test",
+      "rep": 0,
+      "naive_first": true,
+      "closed_book": {
+        "answer": "I don't know",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "George and Amal Clooney's twins are named Ella and Alexander.",
+        "ttft_ms": 842.8
+      },
+      "stream": {
+        "answer": "George and Amal Clooney's twins are named Ella and Alexander.",
+        "ttft_ms": 2692.8,
+        "snapshots_accepted": 5,
+        "snapshots_posted": 5,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 1
+        }
+      },
+      "labels": {
+        "closed_book": "missing",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-test-009",
+      "split": "test",
+      "rep": 0,
+      "naive_first": false,
+      "closed_book": {
+        "answer": "As of March 2024, the NFL teams that had never made the Super Bowl include the Arizona Cardinals, Carolina Panthers, Cleveland Browns, Houston Texans, Jacksonville Jaguars, Los Angeles Chargers, New York Jets, and Tennessee Titans.",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "The provided evidence does not contain a complete list of NFL teams that had never made the Super Bowl as of March 2024. The first document lists teams that have never won a Super Bowl, including the New York Jets, New Orleans Saints, Chicago Bears, Seattle Seahawks, and Philadelphia Eagles, but it does not explicitly state which teams have never appeared in the Super Bowl. The second document lists all NFL teams but does not specify which ones have never made the Super Bowl. Therefore, based on the available evidence, I cannot provide a definitive list of NFL teams that had never made the Super Bowl as of March 2024.",
+        "ttft_ms": 500.3
+      },
+      "stream": {
+        "answer": "The provided evidence does not contain a complete list of NFL teams that had never made the Super Bowl as of March 2024. The first document lists teams that have never won a Super Bowl, including the New York Jets, New Orleans Saints, Chicago Bears, Seattle Seahawks, and Philadelphia Eagles, but it does not explicitly state which teams have never appeared in the Super Bowl. The second document lists all NFL teams but does not specify which ones have never made the Super Bowl. Therefore, based on the available evidence, I cannot provide a definitive list of NFL teams that had never made the Super Bowl as of March 2024.",
+        "ttft_ms": 1875.5,
+        "snapshots_accepted": 5,
+        "snapshots_posted": 5,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 2
+        }
+      },
+      "labels": {
+        "closed_book": "incorrect",
+        "naive": "missing",
+        "stream": "missing"
+      }
+    },
+    {
+      "id": "crag-text-test-010",
+      "split": "test",
+      "rep": 0,
+      "naive_first": true,
+      "closed_book": {
+        "answer": "Babe Ruth, Hank Aaron, and Barry Bonds.",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "Based on the provided evidence, the top five players on the career home run list are Barry Bonds, Hank Aaron, Babe Ruth, Alex Rodriguez, and Albert Pujols. However, the text does not explicitly state the exact number of home runs for each player to definitively rank the top three as of 2022. It only confirms that these five make up the top five on the career list.\n\nThe evidence does mention that Barry Bonds hit 73 home runs in the 2001 season, which was the most in a single season at that time. It also notes that Hank Aaron ranks sixth all-time in home runs (though this appears to be a contextual error in the source text, as Hank Aaron is historically known to be second all-time; the text likely meant he ranks second, but the sentence structure is confusing). Without the specific career totals for Hank Aaron, Babe Ruth, and Alex Rodriguez in the provided text, I cannot definitively name the top three players with their exact counts based solely on this evidence.\n\nTherefore, based on the provided evidence, the top five players on the career home run list are:\n1. Barry Bonds\n2. Hank Aaron\n3. Babe Ruth\n4. Alex Rodriguez\n5. Albert Pujols\n\nThe exact ranking of the top three cannot be confirmed from the text alone due to missing specific career totals for some players and a confusing statement about Hank Aaron's rank.",
+        "ttft_ms": 1045.7
+      },
+      "stream": {
+        "answer": "Based on the provided evidence, the top five players on the career home run list are Barry Bonds, Hank Aaron, Babe Ruth, Alex Rodriguez, and Albert Pujols. However, the text does not explicitly state the exact number of home runs for each player to definitively rank the top three as of 2022. It only confirms that these five make up the top five on the career list.\n\nThe evidence does mention that Barry Bonds hit 73 home runs in the 2001 season, which was the most in a single season at that time. It also notes that Hank Aaron ranks sixth all-time in home runs (though this appears to be a contextual error in the source text, as Hank Aaron is historically known to be second all-time; the text likely meant he ranks second, but the sentence structure is confusing). Without the specific career totals for Hank Aaron, Babe Ruth, and Alex Rodriguez in the provided text, I cannot definitively name the top three players with their exact counts based solely on this evidence.\n\nTherefore, based on the provided evidence, the top five players on the career home run list are:\n1. Barry Bonds\n2. Hank Aaron\n3. Babe Ruth\n4. Alex Rodriguez\n5. Albert Pujols\n\nThe exact ranking of the top three cannot be confirmed from the text alone due to missing specific career totals for some players and a confusing statement about Hank Aaron's rank.",
+        "ttft_ms": 551.3,
+        "snapshots_accepted": 8,
+        "snapshots_posted": 8,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 3
+        }
+      },
+      "labels": {
+        "closed_book": "correct",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-dev-001",
+      "split": "dev",
+      "rep": 0,
+      "naive_first": false,
+      "closed_book": {
+        "answer": "More than one year.",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "To make capital gains long-term, a stock must be held for more than one year before it is sold. If the stock is held for one year or less, the gain is classified as short-term. This rule applies generally to stocks held as investments. There are exceptions for certain types of property, such as assets acquired by gift, from a decedent, or patent property, which may have different holding period rules.",
+        "ttft_ms": 594.2
+      },
+      "stream": {
+        "answer": "To make capital gains long-term, a stock must be held for more than one year before it is sold. If the stock is held for one year or less, the gain is classified as short-term. This rule applies generally to stocks held as investments. There are exceptions for certain types of property, such as assets acquired by gift, from a decedent, or patent property, which may have different holding period rules.",
+        "ttft_ms": 3072.6,
+        "snapshots_accepted": 4,
+        "snapshots_posted": 4,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 2
+        }
+      },
+      "labels": {
+        "closed_book": "correct",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-dev-002",
+      "split": "dev",
+      "rep": 0,
+      "naive_first": true,
+      "closed_book": {
+        "answer": "2021",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "The 2021 Dune movie has better music than the 1984 version. The 1984 film featured a score by Toto, which was his first and only film score. In contrast, the 2021 version features a score by Hans Zimmer, which is described as more striking, using atmospheric noises and a wall of sound to create an immersive experience that matches the film's visuals.",
+        "ttft_ms": 1203.8
+      },
+      "stream": {
+        "answer": "The 2021 Dune movie has better music than the 1984 version. The 1984 film featured a score by Toto, which was his first and only film score. In contrast, the 2021 version features a score by Hans Zimmer, which is described as more striking, using atmospheric noises and a wall of sound to create an immersive experience that matches the film's visuals.",
+        "ttft_ms": 3258.1,
+        "snapshots_accepted": 4,
+        "snapshots_posted": 4,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 2
+        }
+      },
+      "labels": {
+        "closed_book": "correct",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-dev-004",
+      "split": "dev",
+      "rep": 0,
+      "naive_first": false,
+      "closed_book": {
+        "answer": "Yes",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "No, Taylor Swift's debut album was not Fearless. According to the provided evidence, Fearless was her second album, released in 2008. Her debut album is not named in the evidence, but the text explicitly identifies Fearless as her second album.\n\nTherefore, the statement that Fearless was her debut album is incorrect.",
+        "ttft_ms": 608.3
+      },
+      "stream": {
+        "answer": "No, Taylor Swift's debut album was not Fearless. According to the provided evidence, Fearless was her second album, released in 2008. Her debut album is not named in the evidence, but the text explicitly identifies Fearless as her second album.\n\nTherefore, the statement that Fearless was her debut album is incorrect.",
+        "ttft_ms": 2111.8,
+        "snapshots_accepted": 5,
+        "snapshots_posted": 5,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 2
+        }
+      },
+      "labels": {
+        "closed_book": "incorrect",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-test-002",
+      "split": "test",
+      "rep": 1,
+      "naive_first": false,
+      "closed_book": {
+        "answer": "Steve Jobs",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "Steve Jobs stepped down as Apple's CEO in August 2011. This is confirmed by multiple sources in the provided evidence, which state that in August 2011, Steve Jobs stepped down as CEO after 14 years, and Tim Cook succeeded him.",
+        "ttft_ms": 479.4
+      },
+      "stream": {
+        "answer": "Steve Jobs stepped down as Apple's CEO in August 2011. This is confirmed by multiple sources in the provided evidence, which state that in August 2011, Steve Jobs stepped down as CEO after 14 years, and Tim Cook succeeded him.",
+        "ttft_ms": 2200.4,
+        "snapshots_accepted": 2,
+        "snapshots_posted": 2,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 1
+        }
+      },
+      "labels": {
+        "closed_book": "correct",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-test-003",
+      "split": "test",
+      "rep": 1,
+      "naive_first": true,
+      "closed_book": {
+        "answer": "Harry Potter and the Deathly Hallows: Part 2",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "Harry Potter and the Deathly Hallows: Part 2 had the larger domestic opening weekend. According to the evidence, Deathly Hallows: Part 2 had the biggest domestic opening weekend of the entire Harry Potter franchise, surpassing Harry Potter and the Half-Blood Prince. [crag-global-14a3d0579cdfdede70eafa7e::c0001]",
+        "ttft_ms": 1103.7
+      },
+      "stream": {
+        "answer": "Harry Potter and the Deathly Hallows: Part 2 had the larger domestic opening weekend. According to the evidence, Deathly Hallows: Part 2 had the biggest domestic opening weekend of the entire Harry Potter franchise, surpassing Harry Potter and the Half-Blood Prince. [crag-global-14a3d0579cdfdede70eafa7e::c0001]",
+        "ttft_ms": 2224.3,
+        "snapshots_accepted": 11,
+        "snapshots_posted": 11,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 3
+        }
+      },
+      "labels": {
+        "closed_book": "correct",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-test-004",
+      "split": "test",
+      "rep": 1,
+      "naive_first": false,
+      "closed_book": {
+        "answer": "Natalie Portman",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "Natalie Portman won the Academy Award for Best Actress for her role in Black Swan. She received the award at the 2011 Oscars for her performance as the lead in the psychological horror film based in the world of ballet. She was nominated ahead of other actresses including Annette Bening and Nicole Kidman.",
+        "ttft_ms": 868.3
+      },
+      "stream": {
+        "answer": "Natalie Portman won the Academy Award for Best Actress for her role in Black Swan. She received the award at the 2011 Oscars for her performance as the lead in the psychological horror film based in the world of ballet. She was nominated ahead of other actresses including Annette Bening and Nicole Kidman.",
+        "ttft_ms": 2264.6,
+        "snapshots_accepted": 5,
+        "snapshots_posted": 5,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 1
+        }
+      },
+      "labels": {
+        "closed_book": "correct",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-test-005",
+      "split": "test",
+      "rep": 1,
+      "naive_first": true,
+      "closed_book": {
+        "answer": "Killers' album \"Hot Fuss\" was released in 2004 and includes the songs \"Mr. Brightside\" and \"Jenny Was a Friend of Mine.\"",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "The album released by The Killers in 2004 that includes the songs \"Mr. Brightside\" and \"Jenny Was a Friend of Mine\" is Hot Fuss. This was their debut album, released in 2004, and it reached #1 in both the UK and Australia. The album was certified 3x Platinum in Canada by the CRIA on October 17, 2005.",
+        "ttft_ms": 4378.9
+      },
+      "stream": {
+        "answer": "The album released by The Killers in 2004 that includes the songs \"Mr. Brightside\" and \"Jenny Was a Friend of Mine\" is Hot Fuss. This was their debut album, released in 2004, and it reached #1 in both the UK and Australia. The album was certified 3x Platinum in Canada by the CRIA on October 17, 2005.",
+        "ttft_ms": 2781.9,
+        "snapshots_accepted": 8,
+        "snapshots_posted": 8,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 4
+        }
+      },
+      "labels": {
+        "closed_book": "correct",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-test-006",
+      "split": "test",
+      "rep": 1,
+      "naive_first": false,
+      "closed_book": {
+        "answer": "Machine Gun.",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "Kings of Leon released the album Mechanical Bull in 2013, which included the songs \"Wait for Me\" and \"Family Tree.\" This was their sixth studio album, noted for being breezier and less labored than their previous work, Come Around Sundown. The album features other tracks like \"Rock City\" and \"Coming Back Again,\" and it was fronted by the lead single \"Supersoaker.\"",
+        "ttft_ms": 2170.5
+      },
+      "stream": {
+        "answer": "Kings of Leon released the album Mechanical Bull in 2013, which included the songs \"Wait for Me\" and \"Family Tree.\" This was their sixth studio album, noted for being breezier and less labored than their previous work, Come Around Sundown. The album features other tracks like \"Rock City\" and \"Coming Back Again,\" and it was fronted by the lead single \"Supersoaker.\"",
+        "ttft_ms": 831.6,
+        "snapshots_accepted": 10,
+        "snapshots_posted": 10,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 3
+        }
+      },
+      "labels": {
+        "closed_book": "incorrect",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-test-007",
+      "split": "test",
+      "rep": 1,
+      "naive_first": true,
+      "closed_book": {
+        "answer": "Mayon Volcano",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "According to the Philippine Institute of Volcanology and Seismology (PHIVOLCS), the most active volcano in the Philippines is Mt. Mayon. It is located in the province of Albay in the Bicol region and is known for its almost perfect conical shape. Mt. Mayon has erupted at least 47 times in the last 500 years, with the 1814 eruption being the most destructive, burying the town of Cagsawa and killing over a thousand people. PHIVOLCS permanently monitors Mt. Mayon, and activities have been observed over the years, including a surprise eruption in 2013 that killed 5 climbers.",
+        "ttft_ms": 1445.1
+      },
+      "stream": {
+        "answer": "According to the Philippine Institute of Volcanology and Seismology (PHIVOLCS), the most active volcano in the Philippines is Mt. Mayon. It is located in the province of Albay in the Bicol region and is known for its almost perfect conical shape. Mt. Mayon has erupted at least 47 times in the last 500 years, with the 1814 eruption being the most destructive, burying the town of Cagsawa and killing over a thousand people. PHIVOLCS permanently monitors Mt. Mayon, and activities have been observed over the years, including a surprise eruption in 2013 that killed 5 climbers.",
+        "ttft_ms": 1828.2,
+        "snapshots_accepted": 4,
+        "snapshots_posted": 4,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 1
+        }
+      },
+      "labels": {
+        "closed_book": "correct",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-test-008",
+      "split": "test",
+      "rep": 1,
+      "naive_first": false,
+      "closed_book": {
+        "answer": "I don't know",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "George and Amal Clooney's twins are named Ella and Alexander.",
+        "ttft_ms": 438.4
+      },
+      "stream": {
+        "answer": "George and Amal Clooney's twins are named Ella and Alexander.",
+        "ttft_ms": 3218.9,
+        "snapshots_accepted": 5,
+        "snapshots_posted": 5,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 1
+        }
+      },
+      "labels": {
+        "closed_book": "missing",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-test-009",
+      "split": "test",
+      "rep": 1,
+      "naive_first": true,
+      "closed_book": {
+        "answer": "As of March 2024, the NFL teams that had never made the Super Bowl include the Arizona Cardinals, Carolina Panthers, Cleveland Browns, Houston Texans, Jacksonville Jaguars, Los Angeles Chargers, New York Jets, and Tennessee Titans.",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "The provided evidence does not contain a complete list of NFL teams that had never made the Super Bowl as of March 2024. The first document lists teams that have never won a Super Bowl, including the New York Jets, New Orleans Saints, Chicago Bears, Seattle Seahawks, and Philadelphia Eagles, but it does not explicitly state which teams have never appeared in the Super Bowl. The second document lists all NFL teams but does not specify which ones have never made the Super Bowl. Therefore, based on the available evidence, I cannot provide a definitive list of NFL teams that had never made the Super Bowl as of March 2024.",
+        "ttft_ms": 3054.0
+      },
+      "stream": {
+        "answer": "The provided evidence does not contain a complete list of NFL teams that had never made the Super Bowl as of March 2024. The first document lists teams that have never won a Super Bowl, including the New York Jets, New Orleans Saints, Chicago Bears, Seattle Seahawks, and Philadelphia Eagles, but it does not explicitly state which teams have never appeared in the Super Bowl. The second document lists all NFL teams but does not specify which ones have never made the Super Bowl. Therefore, based on the available evidence, I cannot provide a definitive list of NFL teams that had never made the Super Bowl as of March 2024.",
+        "ttft_ms": 3447.3,
+        "snapshots_accepted": 5,
+        "snapshots_posted": 5,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 1
+        }
+      },
+      "labels": {
+        "closed_book": "incorrect",
+        "naive": "missing",
+        "stream": "missing"
+      }
+    },
+    {
+      "id": "crag-text-test-010",
+      "split": "test",
+      "rep": 1,
+      "naive_first": false,
+      "closed_book": {
+        "answer": "Babe Ruth, Hank Aaron, and Barry Bonds.",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "Based on the provided evidence, the top five players on the career home run list are Barry Bonds, Hank Aaron, Babe Ruth, Alex Rodriguez, and Albert Pujols. However, the text does not explicitly state the exact number of home runs for each player to definitively rank the top three as of 2022. It only confirms that these five make up the top five on the career list.\n\nThe evidence does mention that Barry Bonds hit 73 home runs in the 2001 season, which was the most in a single season at that time. It also notes that Hank Aaron ranks sixth all-time in home runs (though this appears to be a contextual error in the source text, as Hank Aaron is historically known to be second all-time; the text likely meant he ranks second, but the sentence structure is confusing). Without the specific career totals for Hank Aaron, Babe Ruth, and Alex Rodriguez in the provided text, I cannot definitively name the top three players with their exact counts based solely on this evidence.\n\nTherefore, based on the provided evidence, the top five players on the career home run list are:\n1. Barry Bonds\n2. Hank Aaron\n3. Babe Ruth\n4. Alex Rodriguez\n5. Albert Pujols\n\nThe exact ranking of the top three cannot be confirmed from the text alone due to missing specific career totals for some players and a confusing statement about Hank Aaron's rank.",
+        "ttft_ms": 580.3
+      },
+      "stream": {
+        "answer": "Based on the provided evidence, the top five players on the career home run list are Barry Bonds, Hank Aaron, Babe Ruth, Alex Rodriguez, and Albert Pujols. However, the text does not explicitly state the exact number of home runs for each player to definitively rank the top three as of 2022. It only confirms that these five make up the top five on the career list.\n\nThe evidence does mention that Barry Bonds hit 73 home runs in the 2001 season, which was the most in a single season at that time. It also notes that Hank Aaron ranks sixth all-time in home runs (though this appears to be a contextual error in the source text, as Hank Aaron is historically known to be second all-time; the text likely meant he ranks second, but the sentence structure is confusing). Without the specific career totals for Hank Aaron, Babe Ruth, and Alex Rodriguez in the provided text, I cannot definitively name the top three players with their exact counts based solely on this evidence.\n\nTherefore, based on the provided evidence, the top five players on the career home run list are:\n1. Barry Bonds\n2. Hank Aaron\n3. Babe Ruth\n4. Alex Rodriguez\n5. Albert Pujols\n\nThe exact ranking of the top three cannot be confirmed from the text alone due to missing specific career totals for some players and a confusing statement about Hank Aaron's rank.",
+        "ttft_ms": 2037.0,
+        "snapshots_accepted": 8,
+        "snapshots_posted": 8,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 2
+        }
+      },
+      "labels": {
+        "closed_book": "correct",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-dev-001",
+      "split": "dev",
+      "rep": 1,
+      "naive_first": true,
+      "closed_book": {
+        "answer": "More than one year.",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "To make capital gains long-term, a stock must be held for more than one year before it is sold. If the stock is held for one year or less, the gain is classified as short-term. This rule applies generally to stocks held as investments. There are exceptions for certain types of property, such as assets acquired by gift, from a decedent, or patent property, which may have different holding period rules.",
+        "ttft_ms": 1663.8
+      },
+      "stream": {
+        "answer": "To make capital gains long-term, a stock must be held for more than one year before it is sold. If the stock is held for one year or less, the gain is classified as short-term. This rule applies generally to stocks held as investments. There are exceptions for certain types of property, such as assets acquired by gift, from a decedent, or patent property, which may have different holding period rules.",
+        "ttft_ms": 1614.5,
+        "snapshots_accepted": 4,
+        "snapshots_posted": 4,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 2
+        }
+      },
+      "labels": {
+        "closed_book": "correct",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-dev-002",
+      "split": "dev",
+      "rep": 1,
+      "naive_first": false,
+      "closed_book": {
+        "answer": "2021",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "The 2021 Dune movie has better music than the 1984 version. The 1984 film featured a score by Toto, which was his first and only film score. In contrast, the 2021 version features a score by Hans Zimmer, which is described as more striking, using atmospheric noises and a wall of sound to create an immersive experience that matches the film's visuals.",
+        "ttft_ms": 856.9
+      },
+      "stream": {
+        "answer": "The 2021 Dune movie has better music than the 1984 version. The 1984 film featured a score by Toto, which was his first and only film score. In contrast, the 2021 version features a score by Hans Zimmer, which is described as more striking, using atmospheric noises and a wall of sound to create an immersive experience that matches the film's visuals.",
+        "ttft_ms": 1382.0,
+        "snapshots_accepted": 4,
+        "snapshots_posted": 4,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 2
+        }
+      },
+      "labels": {
+        "closed_book": "correct",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    },
+    {
+      "id": "crag-text-dev-004",
+      "split": "dev",
+      "rep": 1,
+      "naive_first": true,
+      "closed_book": {
+        "answer": "Yes",
+        "ttft_ms": null
+      },
+      "naive": {
+        "answer": "No, Taylor Swift's debut album was not Fearless. According to the provided evidence, Fearless was her second album, released in 2008. Her debut album is not named in the evidence, but the text explicitly identifies Fearless as her second album.\n\nTherefore, the statement that Fearless was her debut album is incorrect.",
+        "ttft_ms": 3695.1
+      },
+      "stream": {
+        "answer": "No, Taylor Swift's debut album was not Fearless. According to the provided evidence, Fearless was her second album, released in 2008. Her debut album is not named in the evidence, but the text explicitly identifies Fearless as her second album.\n\nTherefore, the statement that Fearless was her debut album is incorrect.",
+        "ttft_ms": 1146.1,
+        "snapshots_accepted": 5,
+        "snapshots_posted": 5,
+        "telemetry": {
+          "ready_before_commit": false,
+          "lead_ms": null,
+          "from_fallback": true,
+          "reuse_mode": "committed_text_retrieval",
+          "controller_calls": 2
+        }
+      },
+      "labels": {
+        "closed_book": "incorrect",
+        "naive": "correct",
+        "stream": "correct"
+      }
+    }
+  ],
+  "honest_headline": "Retrieval raises truthfulness far above closed-book and drives observed-incorrect labels to 0 (robust). The streaming arm showed NO speculative benefit: speculation landed before commit on 0% of turns, so any TTFT delta is a cache/order artifact, not the paper's prefetch mechanism. Absolute numbers are not comparable to the paper (local Qdrant, tiny n, synthetic TTS, cascade not E2E)."
+}

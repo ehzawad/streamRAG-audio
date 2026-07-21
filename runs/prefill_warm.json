@@ -1,0 +1,16 @@
+{
+  "n": 12,
+  "context_tokens_approx": 1800,
+  "cold_ttft_ms": {
+    "median": 695.8,
+    "mean": 687.4
+  },
+  "warm_ttft_ms": {
+    "median": 331.3,
+    "mean": 332.4
+  },
+  "prefill_warm_saving_ms_median": 362.1,
+  "prefill_warm_saving_pct": 52.0,
+  "warm_wins": "12/12",
+  "note": "Warming the answer KV cache during speech reduces committed TTFT by the median above. This is the real fast lever on one A5000; the paper's speculative-retrieval prefetch was a measured null on this workload (see runs/three_arm.json). Benefit requires the query+evidence to stabilize before endpoint with lead to spare."
+}

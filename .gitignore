@@ -1,0 +1,53 @@
+__pycache__/
+*.py[cod]
+*.so
+*.dylib
+.DS_Store
+.env*
+!.env.example
+.venv/
+.pytest_cache/
+.ruff_cache/
+.playwright-cli/
+build/
+dist/
+*.egg-info/
+data/qdrant*/
+data/raw/
+data/*.sqlite3
+data/*.sqlite3-*
+tmp/
+var/
+frontend/node_modules/
+frontend/dist/
+frontend/*.tsbuildinfo
+frontend/vite.config.js
+frontend/vite.config.d.ts
+comparison/benchmark/results/**
+!comparison/benchmark/results/dev-comparison/
+!comparison/benchmark/results/dev-comparison/predictions.jsonl
+!comparison/benchmark/results/dev-comparison/predictions.manifest.json
+!comparison/benchmark/results/dev-comparison/summary.json
+!comparison/benchmark/results/dev-comparison/summary.md
+!comparison/benchmark/results/final/
+!comparison/benchmark/results/final/*.jsonl
+!comparison/benchmark/results/final/*.json
+!comparison/benchmark/results/final/*.md
+.local-state/
+
+# --- streamRAG-audio: audio front-end + eval ---
+.venv-audio/
+audio/__pycache__/
+arms/__pycache__/
+harness/__pycache__/
+scoring/__pycache__/
+demo/__pycache__/
+# Publish the headline evidence (summary JSON) so every claimed number is verifiable,
+# but keep heavy/rebuildable service state and wavs out of git.
+runs/services/
+runs/serve/
+runs/**/*.wav
+# CRAG-derived synthesized audio is a NON-COMMERCIAL derivative: never committed.
+data/audio_crag/wav/
+data/audio_crag/**/*.wav
+data/audio_crag/answers/
