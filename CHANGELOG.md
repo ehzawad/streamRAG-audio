@@ -1,5 +1,20 @@
 # Changelog
 
+## Qwen3-TTS 9-voice headline (replaces single-voice as the accuracy headline)
+
+- New spoken set: the 12 CRAG questions rendered in **all 9 Qwen3-TTS CustomVoice timbres**
+  (Apache-2.0), fixed neutral style → 108 clips = **12 question clusters × 9 voices**
+  (`audio/synth_qwen.py`, `scoring/asr_multivoice.py`, `harness/run_multivoice.py`).
+- Result (`runs/multivoice.json`, per the reused automatic judge): retrieval-enabled system
+  **+0.898 vs +0.389** closed-book, paired gap **+0.509**, **question-clustered** 95 % CI
+  **[0.20, 0.85]**, **positive on 9/9 voices**; WER≤0.10 sensitivity +0.465, CI [0.14, 0.84]
+  (89 clips). Reconciled with codex round 5: framed as timbre **consistency** over 12 question
+  clusters (NOT n=108 iid / unseen-voice / human robustness / retrieval-only causal), CIs are
+  question-clustered bootstraps, per-question rows persisted for auditability, claim gate checks
+  9/9 positivity. The single-voice **Chatterbox** run is kept as a documented prior baseline
+  (`runs/three_arm.json`). The speculative-retrieval latency null was measured only on that prior
+  run (NOT voice-independent, not re-run per voice); the prefill no-KV-reuse null stands.
+
 ## streamRAG-audio: spoken-query RAG on one A5000 (this repo)
 
 New work layered on the streamrag-local base (imported unchanged):

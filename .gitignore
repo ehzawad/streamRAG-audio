@@ -51,3 +51,7 @@ runs/**/*.wav
 data/audio_crag/wav/
 data/audio_crag/**/*.wav
 data/audio_crag/answers/
+# Qwen3-TTS multi-voice robustness set (CRAG-derived, non-commercial): never committed.
+data/audio_crag_qwen/wav24/
+data/audio_crag_qwen/wav16/
+data/audio_crag_qwen/**/*.wav

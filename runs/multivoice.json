@@ -1,0 +1,1006 @@
+{
+  "dataset": "Qwen3-TTS 9-voice CRAG set: 108 clips = 12 CRAG question CLUSTERS x 9 tested timbres, fixed neutral style. NEW HEADLINE (replaces single-voice Chatterbox CRAG-TTS-local, kept as prior baseline: runs/three_arm.json). CRAG derivative (CC BY-NC). Truthfulness per the REUSED automatic judge (same :8400 model answers AND judges). 12 INDEPENDENT question clusters, 108 repeated observations; CIs are question-clustered bootstraps, NOT n=108 iid.",
+  "voices": [
+    "aiden",
+    "dylan",
+    "eric",
+    "ono_anna",
+    "ryan",
+    "serena",
+    "sohee",
+    "uncle_fu",
+    "vivian"
+  ],
+  "all_108": {
+    "macro": {
+      "n_clips": 108,
+      "n_question_clusters": 12,
+      "voices_present": 9,
+      "closed_book_truth": 0.3889,
+      "naive_truth": 0.8982,
+      "macro_paired_gap": 0.5093,
+      "macro_gap_ci95_qcluster_bootstrap": [
+        0.2037,
+        0.8519
+      ],
+      "gap_positive_on": "9/9"
+    },
+    "per_voice": {
+      "aiden": {
+        "n": 12,
+        "mean_wer": 0.053,
+        "closed_book_truth": 0.5,
+        "naive_truth": 1.0,
+        "paired_gap": 0.5,
+        "paired_gap_ci95_qbootstrap": [
+          0.0833,
+          1.0
+        ]
+      },
+      "dylan": {
+        "n": 12,
+        "mean_wer": 0.0907,
+        "closed_book_truth": 0.25,
+        "naive_truth": 0.75,
+        "paired_gap": 0.5,
+        "paired_gap_ci95_qbootstrap": [
+          0.0833,
+          1.0
+        ]
+      },
+      "eric": {
+        "n": 12,
+        "mean_wer": 0.0312,
+        "closed_book_truth": 0.4167,
+        "naive_truth": 0.9167,
+        "paired_gap": 0.5,
+        "paired_gap_ci95_qbootstrap": [
+          0.0833,
+          1.0
+        ]
+      },
+      "ono_anna": {
+        "n": 12,
+        "mean_wer": 0.0168,
+        "closed_book_truth": 0.4167,
+        "naive_truth": 0.8333,
+        "paired_gap": 0.4167,
+        "paired_gap_ci95_qbootstrap": [
+          0.0833,
+          0.75
+        ]
+      },
+      "ryan": {
+        "n": 12,
+        "mean_wer": 0.0761,
+        "closed_book_truth": 0.5,
+        "naive_truth": 0.8333,
+        "paired_gap": 0.3333,
+        "paired_gap_ci95_qbootstrap": [
+          0.0833,
+          0.5833
+        ]
+      },
+      "serena": {
+        "n": 12,
+        "mean_wer": 0.0937,
+        "closed_book_truth": 0.4167,
+        "naive_truth": 1.0,
+        "paired_gap": 0.5833,
+        "paired_gap_ci95_qbootstrap": [
+          0.25,
+          0.9167
+        ]
+      },
+      "sohee": {
+        "n": 12,
+        "mean_wer": 0.0524,
+        "closed_book_truth": 0.3333,
+        "naive_truth": 0.9167,
+        "paired_gap": 0.5833,
+        "paired_gap_ci95_qbootstrap": [
+          0.25,
+          0.9167
+        ]
+      },
+      "uncle_fu": {
+        "n": 12,
+        "mean_wer": 0.0235,
+        "closed_book_truth": 0.5,
+        "naive_truth": 0.9167,
+        "paired_gap": 0.4167,
+        "paired_gap_ci95_qbootstrap": [
+          0.0833,
+          0.8333
+        ]
+      },
+      "vivian": {
+        "n": 12,
+        "mean_wer": 0.0807,
+        "closed_book_truth": 0.1667,
+        "naive_truth": 0.9167,
+        "paired_gap": 0.75,
+        "paired_gap_ci95_qbootstrap": [
+          0.3333,
+          1.25
+        ]
+      }
+    }
+  },
+  "wer_filtered": {
+    "macro": {
+      "n_clips": 89,
+      "n_question_clusters": 12,
+      "voices_present": 9,
+      "closed_book_truth": 0.3965,
+      "naive_truth": 0.9038,
+      "macro_paired_gap": 0.4653,
+      "macro_gap_ci95_qcluster_bootstrap": [
+        0.1412,
+        0.8403
+      ],
+      "gap_positive_on": "9/9"
+    },
+    "per_voice": {
+      "aiden": {
+        "n": 9,
+        "mean_wer": 0.0046,
+        "closed_book_truth": 0.4444,
+        "naive_truth": 1.0,
+        "paired_gap": 0.5556,
+        "paired_gap_ci95_qbootstrap": [
+          0.0,
+          1.1111
+        ]
+      },
+      "dylan": {
+        "n": 11,
+        "mean_wer": 0.0181,
+        "closed_book_truth": 0.2727,
+        "naive_truth": 0.8182,
+        "paired_gap": 0.5455,
+        "paired_gap_ci95_qbootstrap": [
+          0.1818,
+          1.0
+        ]
+      },
+      "eric": {
+        "n": 11,
+        "mean_wer": 0.0038,
+        "closed_book_truth": 0.4545,
+        "naive_truth": 1.0,
+        "paired_gap": 0.5455,
+        "paired_gap_ci95_qbootstrap": [
+          0.0909,
+          1.0
+        ]
+      },
+      "ono_anna": {
+        "n": 11,
+        "mean_wer": 0.0083,
+        "closed_book_truth": 0.4545,
+        "naive_truth": 0.8182,
+        "paired_gap": 0.3636,
+        "paired_gap_ci95_qbootstrap": [
+          0.0,
+          0.7273
+        ]
+      },
+      "ryan": {
+        "n": 10,
+        "mean_wer": 0.0142,
+        "closed_book_truth": 0.6,
+        "naive_truth": 0.8,
+        "paired_gap": 0.2,
+        "paired_gap_ci95_qbootstrap": [
+          0.0,
+          0.5
+        ]
+      },
+      "serena": {
+        "n": 7,
+        "mean_wer": 0.0274,
+        "closed_book_truth": 0.2857,
+        "naive_truth": 1.0,
+        "paired_gap": 0.7143,
+        "paired_gap_ci95_qbootstrap": [
+          0.2857,
+          1.2857
+        ]
+      },
+      "sohee": {
+        "n": 10,
+        "mean_wer": 0.0233,
+        "closed_book_truth": 0.4,
+        "naive_truth": 0.9,
+        "paired_gap": 0.5,
+        "paired_gap_ci95_qbootstrap": [
+          0.1,
+          0.9
+        ]
+      },
+      "uncle_fu": {
+        "n": 11,
+        "mean_wer": 0.0091,
+        "closed_book_truth": 0.5455,
+        "naive_truth": 0.9091,
+        "paired_gap": 0.3636,
+        "paired_gap_ci95_qbootstrap": [
+          0.0,
+          0.7273
+        ]
+      },
+      "vivian": {
+        "n": 9,
+        "mean_wer": 0.0212,
+        "closed_book_truth": 0.1111,
+        "naive_truth": 0.8889,
+        "paired_gap": 0.7778,
+        "paired_gap_ci95_qbootstrap": [
+          0.2222,
+          1.4444
+        ]
+      }
+    }
+  },
+  "note_latency": "Streaming-latency findings are NOT re-run here and are NOT voice-independent: the speculative-retrieval null (0/24, paired median +898.5ms) was measured ONLY on the prior Chatterbox run (runs/three_arm.json); the prefill no-KV-reuse null is a Qwen3.5/llama.cpp property (runs/prefill_warm.json).",
+  "rows": [
+    {
+      "id": "crag-text-test-002",
+      "voice": "aiden",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-002",
+      "voice": "dylan",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-002",
+      "voice": "eric",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-002",
+      "voice": "ono_anna",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-002",
+      "voice": "ryan",
+      "wer": 0.1,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-002",
+      "voice": "serena",
+      "wer": 0.2,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-002",
+      "voice": "sohee",
+      "wer": 0.1,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-002",
+      "voice": "uncle_fu",
+      "wer": 0.1,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-002",
+      "voice": "vivian",
+      "wer": 0.1,
+      "closed_book": "incorrect",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-003",
+      "voice": "aiden",
+      "wer": 0.0417,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-003",
+      "voice": "dylan",
+      "wer": 0.0417,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-003",
+      "voice": "eric",
+      "wer": 0.0417,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-003",
+      "voice": "ono_anna",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-003",
+      "voice": "ryan",
+      "wer": 0.0417,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-003",
+      "voice": "serena",
+      "wer": 0.0833,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-003",
+      "voice": "sohee",
+      "wer": 0.0417,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-003",
+      "voice": "uncle_fu",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-003",
+      "voice": "vivian",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-004",
+      "voice": "aiden",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-004",
+      "voice": "dylan",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-004",
+      "voice": "eric",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-004",
+      "voice": "ono_anna",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-004",
+      "voice": "ryan",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-004",
+      "voice": "serena",
+      "wer": 0.25,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-004",
+      "voice": "sohee",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-004",
+      "voice": "uncle_fu",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-004",
+      "voice": "vivian",
+      "wer": 0.1667,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-005",
+      "voice": "aiden",
+      "wer": 0.1905,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-005",
+      "voice": "dylan",
+      "wer": 0.0,
+      "closed_book": "incorrect",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-005",
+      "voice": "eric",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-005",
+      "voice": "ono_anna",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-005",
+      "voice": "ryan",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-005",
+      "voice": "serena",
+      "wer": 0.1905,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-005",
+      "voice": "sohee",
+      "wer": 0.2857,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-005",
+      "voice": "uncle_fu",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-005",
+      "voice": "vivian",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-006",
+      "voice": "aiden",
+      "wer": 0.0,
+      "closed_book": "incorrect",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-006",
+      "voice": "dylan",
+      "wer": 0.0,
+      "closed_book": "incorrect",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-006",
+      "voice": "eric",
+      "wer": 0.0,
+      "closed_book": "incorrect",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-006",
+      "voice": "ono_anna",
+      "wer": 0.0,
+      "closed_book": "incorrect",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-006",
+      "voice": "ryan",
+      "wer": 0.1053,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-006",
+      "voice": "serena",
+      "wer": 0.0526,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-006",
+      "voice": "sohee",
+      "wer": 0.0,
+      "closed_book": "incorrect",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-006",
+      "voice": "uncle_fu",
+      "wer": 0.0,
+      "closed_book": "incorrect",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-006",
+      "voice": "vivian",
+      "wer": 0.0,
+      "closed_book": "incorrect",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-007",
+      "voice": "aiden",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-007",
+      "voice": "dylan",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-007",
+      "voice": "eric",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-007",
+      "voice": "ono_anna",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-007",
+      "voice": "ryan",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-007",
+      "voice": "serena",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-007",
+      "voice": "sohee",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-007",
+      "voice": "uncle_fu",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-007",
+      "voice": "vivian",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-008",
+      "voice": "aiden",
+      "wer": 0.1818,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-008",
+      "voice": "dylan",
+      "wer": 0.0909,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-008",
+      "voice": "eric",
+      "wer": 0.0,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-008",
+      "voice": "ono_anna",
+      "wer": 0.0909,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-008",
+      "voice": "ryan",
+      "wer": 0.0,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-008",
+      "voice": "serena",
+      "wer": 0.1818,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-008",
+      "voice": "sohee",
+      "wer": 0.0909,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-008",
+      "voice": "uncle_fu",
+      "wer": 0.1818,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-008",
+      "voice": "vivian",
+      "wer": 0.0909,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-009",
+      "voice": "aiden",
+      "wer": 0.0,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-009",
+      "voice": "dylan",
+      "wer": 0.0,
+      "closed_book": "missing",
+      "naive": "missing"
+    },
+    {
+      "id": "crag-text-test-009",
+      "voice": "eric",
+      "wer": 0.0,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-009",
+      "voice": "ono_anna",
+      "wer": 0.0,
+      "closed_book": "missing",
+      "naive": "missing"
+    },
+    {
+      "id": "crag-text-test-009",
+      "voice": "ryan",
+      "wer": 0.0,
+      "closed_book": "missing",
+      "naive": "missing"
+    },
+    {
+      "id": "crag-text-test-009",
+      "voice": "serena",
+      "wer": 0.0,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-009",
+      "voice": "sohee",
+      "wer": 0.0,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-009",
+      "voice": "uncle_fu",
+      "wer": 0.0,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-009",
+      "voice": "vivian",
+      "wer": 0.0,
+      "closed_book": "missing",
+      "naive": "missing"
+    },
+    {
+      "id": "crag-text-test-010",
+      "voice": "aiden",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-010",
+      "voice": "dylan",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-010",
+      "voice": "eric",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-010",
+      "voice": "ono_anna",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-010",
+      "voice": "ryan",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-010",
+      "voice": "serena",
+      "wer": 0.0556,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-010",
+      "voice": "sohee",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-010",
+      "voice": "uncle_fu",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-test-010",
+      "voice": "vivian",
+      "wer": 0.1667,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-001",
+      "voice": "aiden",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-001",
+      "voice": "dylan",
+      "wer": 0.0667,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-001",
+      "voice": "eric",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-001",
+      "voice": "ono_anna",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-001",
+      "voice": "ryan",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-001",
+      "voice": "serena",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-001",
+      "voice": "sohee",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-001",
+      "voice": "uncle_fu",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-001",
+      "voice": "vivian",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-002",
+      "voice": "aiden",
+      "wer": 0.2222,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-002",
+      "voice": "dylan",
+      "wer": 0.8889,
+      "closed_book": "missing",
+      "naive": "missing"
+    },
+    {
+      "id": "crag-text-dev-002",
+      "voice": "eric",
+      "wer": 0.3333,
+      "closed_book": "missing",
+      "naive": "missing"
+    },
+    {
+      "id": "crag-text-dev-002",
+      "voice": "ono_anna",
+      "wer": 0.1111,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-002",
+      "voice": "ryan",
+      "wer": 0.6667,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-002",
+      "voice": "serena",
+      "wer": 0.1111,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-002",
+      "voice": "sohee",
+      "wer": 0.1111,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-002",
+      "voice": "uncle_fu",
+      "wer": 0.0,
+      "closed_book": "correct",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-002",
+      "voice": "vivian",
+      "wer": 0.4444,
+      "closed_book": "missing",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-004",
+      "voice": "aiden",
+      "wer": 0.0,
+      "closed_book": "incorrect",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-004",
+      "voice": "dylan",
+      "wer": 0.0,
+      "closed_book": "incorrect",
+      "naive": "missing"
+    },
+    {
+      "id": "crag-text-dev-004",
+      "voice": "eric",
+      "wer": 0.0,
+      "closed_book": "incorrect",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-004",
+      "voice": "ono_anna",
+      "wer": 0.0,
+      "closed_book": "incorrect",
+      "naive": "missing"
+    },
+    {
+      "id": "crag-text-dev-004",
+      "voice": "ryan",
+      "wer": 0.0,
+      "closed_book": "incorrect",
+      "naive": "missing"
+    },
+    {
+      "id": "crag-text-dev-004",
+      "voice": "serena",
+      "wer": 0.0,
+      "closed_book": "incorrect",
+      "naive": "correct"
+    },
+    {
+      "id": "crag-text-dev-004",
+      "voice": "sohee",
+      "wer": 0.0,
+      "closed_book": "incorrect",
+      "naive": "missing"
+    },
+    {
+      "id": "crag-text-dev-004",
+      "voice": "uncle_fu",
+      "wer": 0.0,
+      "closed_book": "incorrect",
+      "naive": "missing"
+    },
+    {
+      "id": "crag-text-dev-004",
+      "voice": "vivian",
+      "wer": 0.0,
+      "closed_book": "incorrect",
+      "naive": "correct"
+    }
+  ],
+  "claim": "The retrieval-enabled system's advantage over the illustrative closed-book baseline was OBSERVED positive on every one of the nine TESTED Qwen3-TTS synthetic voices (per the reused automatic judge). This is consistency across these tested timbres over 12 question clusters \u2014 NOT n=108 independent samples, unseen-voice/human/demographic robustness, or a retrieval-only causal effect."
+}

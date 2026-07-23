@@ -23,7 +23,8 @@ Third-party components (fetched or run locally; NOT redistributed here):
   - llama.cpp                     MIT               (ggml-org)
   - Silero VAD                    MIT               (snakers4)         [turn/barge-in demo]
   - faster-whisper / Whisper      MIT               (SYSTRAN / OpenAI) [streaming ASR]
-  - Chatterbox-TTS                MIT               (Resemble AI)      [query synthesis]
+  - Chatterbox-TTS                MIT               (Resemble AI)      [query synthesis, prior baseline]
+  - Qwen3-TTS (CustomVoice)       Apache-2.0        (Alibaba / Qwen)   [9-voice query synthesis, headline]
   - PydanticAI, FastAPI, Qdrant, etc. — see pyproject.toml / requirements-audio.txt
 
 Evaluation data — CRAG (CC BY-NC 4.0, NON-COMMERCIAL):

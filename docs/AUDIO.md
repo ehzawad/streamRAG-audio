@@ -29,7 +29,8 @@ implements that control policy over an ASR front-end.
   the committed text — *safer but different* from the paper, which trusts the latest
   tool result and drops the reflector.
 - Absolute numbers are **not comparable** to the paper (local Qdrant over 250 curated
-  pages ≠ the paper's 100K-document web+KG pipeline; tiny n; synthetic single-voice TTS).
+  pages ≠ the paper's 100K-document web+KG pipeline; 12 question clusters; synthetic TTS —
+  a single-voice Chatterbox baseline and a 9-voice Qwen3-TTS headline set).
 
 ## Pipeline & reuse
 
@@ -49,14 +50,35 @@ start locally. Patched to use `chat_model()` (Chat Completions + `enable_thinkin
 in `local_mode`, mirroring the answer agent. (The same bug exists upstream in
 streamrag-local; left untouched there.)
 
-## CRAG-TTS-local (the spoken set)
+## Spoken sets: `CRAG-TTS-local` (prior baseline) → Qwen3-TTS 9-voice (headline)
 
-Paper-shaped construction (§9 of the paper): synthesize each CRAG Task-1 question with
-a frozen voice/seed (Chatterbox), re-ASR with an independent recognizer (faster-whisper),
-and keep only items at WER ≤ 0.10. **Kept 12/15** (9 test + 3 dev); the 3 excluded are
-recorded in the manifest with their WER, not silently dropped. Synthesized wavs are a
-CRAG derivative (CC BY-NC 4.0, **non-commercial**) — gitignored, regenerate locally with
-`audio/synth.py`.
+**`CRAG-TTS-local` (prior baseline, `audio/synth.py`)** — paper-shaped construction (§9):
+synthesize each CRAG Task-1 question with a frozen voice/seed (**Chatterbox**, one voice),
+re-ASR with an independent recognizer (faster-whisper), keep items at WER ≤ 0.10. Kept 12/15
+(9 test + 3 dev); the 3 excluded are recorded with their WER, not silently dropped. Retained
+as a documented single-voice baseline (`runs/three_arm.json`).
+
+**Qwen3-TTS 9-voice set (current headline, `audio/synth_qwen.py`)** — the same 12 kept
+questions rendered in **all 9 Qwen3-TTS CustomVoice timbres** (`aiden, dylan, eric, ono_anna,
+ryan, serena, sohee, uncle_fu, vivian`) with a fixed neutral style → **108 clips = 12 question
+clusters × 9 voices**. Qwen3-TTS is Apache-2.0; the rendered audio is a CRAG derivative
+(CC BY-NC, non-commercial, gitignored). Per-voice mean WER 0.017–0.094.
+
+**Headline result** (`runs/multivoice.json`, closed-book vs naive-RAG, truthfulness `(C−I)/N`
+per the *reused automatic judge*):
+
+> Across 12 CRAG questions rendered in each of nine **tested** Qwen3-TTS synthetic voices
+> (108 clips; **12 independent question clusters**), the retrieval-enabled system scored
+> **+0.898** vs **+0.389** for an illustrative closed-book baseline — a descriptive paired gap
+> of **+0.509** (question-clustered 95 % bootstrap CI **[0.20, 0.85]**). The observed gap was
+> **positive for every tested voice** (+0.333 … +0.750); the WER ≤ 0.10 sensitivity subset was
+> similar (**+0.465**, CI [0.14, 0.84], 89 clips). This shows **consistency across these tested
+> synthetic timbres** — **not** 108 independent samples, unseen-voice or human/demographic
+> robustness, or a retrieval-only causal effect (both arms get the same transcript, but the
+> closed-book arm uses a different answer stack).
+
+CIs are **question-clustered** bootstraps (resampling the 12 questions as intact units), never
+n=108 iid; `multivoice.json` retains per-question rows so the clustering is auditable.
 
 ## Two measurements
 
@@ -112,17 +134,22 @@ win). On latency, be honest: on this stack, **neither** speculative retrieval-pr
 prefill+decode latency. The genuinely useful (negative) finding: **a hybrid/recurrent LLM
 defeats the standard KV-cache-warming latency trick.** The speculative-retrieval coordinator
 is imported and exercised (its commit gate keeps it safe), but reported here as
-latency-neutral-to-negative, not a speedup.
+latency-neutral-to-negative, not a speedup. **The speculative-retrieval null (0/24, paired
+median +898.5 ms) was measured on the prior *Chatterbox* run only — it is NOT voice-independent
+(whether speculation lands depends on voice-conditioned ASR timing) and was not re-run per Qwen
+voice. The prefill no-KV-reuse null, by contrast, is a Qwen3.5/llama.cpp property.**
 
 ## Honest ceiling
 
-- Tiny n (9 test + 3 dev), synthetic single-voice TTS — directional at best; wide CIs.
-- The judge marks any answer containing a gold phrase correct without a contradiction
-  check → report "observed-incorrect labels", not "hallucination".
+- **12 independent question clusters** (× 9 voices = 108 clips) — small; the question-clustered
+  95 % CI is wide ([0.20, 0.85]) though it excludes 0. Do **not** read 108 as an iid n, treat
+  9/9 voices as independent replications, or infer to unseen voices / human / demographic robustness.
+- Truthfulness is **per the reused automatic judge** (the same `:8400` model answers *and* judges;
+  the scorer auto-accepts gold-phrase containment) — "observed-incorrect labels", not "hallucination".
 - closed-book is an **illustrative parametric baseline**, not a strict retrieval ablation
-  (different answer stack/token budget).
+  (different answer stack/token budget) → "retrieval-enabled *system* vs baseline", not causal.
 - Latency: report the **paired** distribution and the **speculation-landed rate**; claim a
-  streaming benefit only if speculation actually landed before commit.
+  streaming benefit only if speculation actually landed before commit (it did not).
 
 ## Reproduce
 
@@ -134,6 +161,10 @@ CUDA_VISIBLE_DEVICES=0 .venv-modular/bin/python audio/synth.py
 # 2. ASR-churn gate + traces (CPU)
 CUDA_VISIBLE_DEVICES="" .venv-modular/bin/python scoring/audio_quality.py
 CUDA_VISIBLE_DEVICES="" .venv-modular/bin/python audio/build_traces.py
-# 3. 3-arm eval (py3.14 RAG venv)
+# 3. 3-arm eval (py3.14 RAG venv) — prior single-voice baseline
 PYTHONPATH=. .venv/bin/python harness/run_three_arm.py
+# 4. Qwen3-TTS 9-voice headline (.venv-qwen-audio synth, then ASR, then eval)
+CUDA_VISIBLE_DEVICES=0 .venv-qwen-audio/bin/python audio/synth_qwen.py
+CUDA_VISIBLE_DEVICES="" .venv-modular/bin/python scoring/asr_multivoice.py
+PYTHONPATH=. .venv/bin/python harness/run_multivoice.py
 ```

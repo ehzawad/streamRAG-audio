@@ -4,7 +4,7 @@ A single-**A5000** exploration of **spoken-query RAG**: a cascaded emulation of 
 *Model-Triggered Streaming RAG control policy* from *Stream RAG* (Arora et al.,
 Meta + CMU, [arXiv:2510.02044](https://arxiv.org/abs/2510.02044)), run fully locally
 over CRAG questions with **Qwen3.5-9B (llama.cpp)** + **bge-large** + **Qdrant**, plus a
-faster-whisper front-end and Chatterbox TTS.
+faster-whisper front-end and **Qwen3-TTS** (9 voices) / Chatterbox query synthesis.
 
 Built on this author's own [streamrag-local](https://github.com/ehzawad/streamrag-local)
 (local variant of [streamRAG](https://github.com/ehzawad/streamRAG)); the streaming
@@ -17,9 +17,14 @@ This started as a faithful port of the paper's speculative streaming and became 
 **evidence-driven** exercise in finding where local latency actually is. Two findings,
 both backed by committed result JSON under `runs/`:
 
-- **Retrieval is the real win (accuracy).** On synthesized spoken CRAG queries,
-  truthfulness `(C−I)/N` rises from **+0.42 (closed-book) to +0.92 (RAG)**, with
-  observed-incorrect answers driven to **0** — fully local. (`runs/three_arm.json`)
+- **Retrieval is the real win (accuracy), and it holds across voices.** On spoken CRAG
+  queries the retrieval-enabled system beats an illustrative closed-book baseline on
+  automatically-judged truthfulness `(C−I)/N`. Headline: the 12 questions rendered in **all 9
+  Qwen3-TTS voices** (108 clips = **12 question clusters**) → **+0.90 vs +0.39, paired gap
+  +0.51** (question-clustered 95 % CI **[0.20, 0.85]**), **positive on 9/9 voices**
+  (`runs/multivoice.json`). The prior single-voice Chatterbox run agrees (+0.92 vs +0.42;
+  `runs/three_arm.json`). Consistency across *tested* synthetic timbres — **not** unseen-voice
+  or human/demographic robustness, and not a retrieval-only causal effect. Fully local.
 - **Neither streaming trick makes it faster here, and I can prove why.** The paper's
   speculative *retrieval* prefetch landed on **0/24** turns (fairly measured, *slower*).
   And **answer-prefill / KV-cache warming does not work either**: instrumenting the server
@@ -42,7 +47,10 @@ bash harness/serve_local.sh                                  # :8400 Qwen3.5-9B,
 CUDA_VISIBLE_DEVICES=0  .venv-modular/bin/python audio/synth.py          # CRAG-TTS-local
 CUDA_VISIBLE_DEVICES="" .venv-modular/bin/python scoring/audio_quality.py # ASR-churn gate
 CUDA_VISIBLE_DEVICES="" .venv-modular/bin/python audio/build_traces.py    # stabilized traces
-PYTHONPATH=. .venv/bin/python harness/run_three_arm.py       # 3-arm accuracy + latency
+PYTHONPATH=. .venv/bin/python harness/run_three_arm.py       # 3-arm (prior single-voice baseline)
+CUDA_VISIBLE_DEVICES=0  .venv-qwen-audio/bin/python audio/synth_qwen.py    # Qwen3-TTS 9-voice set
+CUDA_VISIBLE_DEVICES="" .venv-modular/bin/python scoring/asr_multivoice.py
+PYTHONPATH=. .venv/bin/python harness/run_multivoice.py      # 9-voice headline (per-voice + macro)
 python scoring/prefill_warm.py                               # KV-reuse probe (honest negative)
 ```
 
