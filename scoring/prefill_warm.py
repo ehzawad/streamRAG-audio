@@ -63,12 +63,12 @@ def call(prompt: str, stream: bool):
 
 
 def main() -> int:
-    cold_ttft, repeat_ttft, cold_tok, repeat_tok = [], [], [], []
+    cold_ttft, repeat_ttft, repeat_tok = [], [], []
     for n in range(TRIALS):
         time.sleep(0.3)
         p = evidence(f"n{n}-{time.time_ns()}") + "\nQuestion: " + QUERY
         cold_ttft.append(call(p, True)["ttft_ms"])
-        cold_tok.append(call(p, False))          # this is already a repeat -> would show cache if any
+        call(p, False)  # intermediate identical-prompt pass; result intentionally unused
         repeat_ttft.append(call(p, True)["ttft_ms"])
         repeat_tok.append(call(p, False))
     cold_ttft, repeat_ttft = cold_ttft[1:], repeat_ttft[1:]

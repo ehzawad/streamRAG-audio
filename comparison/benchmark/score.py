@@ -68,20 +68,6 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _integer(value: Any, default: int = -1) -> int:
-    try:
-        return int(value)
-    except TypeError, ValueError:
-        return default
-
-
-def _number(value: Any, default: float = 1.0) -> float:
-    try:
-        return float(value)
-    except TypeError, ValueError:
-        return default
-
-
 def read_manifest(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -546,37 +532,6 @@ def path_summary(items: list[dict[str, Any]], gold_by_id: dict[str, dict[str, An
     ]
     false_premise_ids = {item["id"] for item in false_premise}
     answerable = [item for item in items if item["id"] not in false_premise_ids]
-    costs = [float(item["estimated_cost_usd"]["total"]) for item in completed]
-    accounting_complete = [
-        item for item in completed if item["estimated_cost_usd"].get("accounting_complete") is True
-    ]
-    unpriced_controller_calls = sum(
-        int(item["estimated_cost_usd"].get("unpriced_cancelled_controller_calls") or 0)
-        for item in completed
-    )
-    unpriced_retrieval_calls = sum(
-        int(item["estimated_cost_usd"].get("unpriced_cancelled_retrieval_calls") or 0)
-        for item in completed
-    )
-    unpriced_controller_timeouts = sum(
-        int(item["estimated_cost_usd"].get("unpriced_controller_timeout_calls") or 0)
-        for item in completed
-    )
-    unpriced_controller_failures = sum(
-        int(item["estimated_cost_usd"].get("unpriced_controller_failure_calls") or 0)
-        for item in completed
-    )
-    unpriced_retrieval_timeouts = sum(
-        int(item["estimated_cost_usd"].get("unpriced_retrieval_timeout_calls") or 0)
-        for item in completed
-    )
-    unpriced_retrieval_failures = sum(
-        int(item["estimated_cost_usd"].get("unpriced_retrieval_failure_calls") or 0)
-        for item in completed
-    )
-    unpriced_local_tool_calls = sum(
-        int(item["estimated_cost_usd"].get("unpriced_local_tool_calls") or 0) for item in completed
-    )
     calls = [float(item["usage"]["calls"]) for item in completed]
     controller_calls = [int(item.get("controller", {}).get("calls") or 0) for item in completed]
     retrieval_calls = [int(item.get("retrieval", {}).get("calls") or 0) for item in completed]
@@ -695,28 +650,6 @@ def path_summary(items: list[dict[str, Any]], gold_by_id: dict[str, dict[str, An
             if dynamic_tool_calls
             else None
         ),
-        "priced_outputs": len(costs),
-        "cost_coverage": len(costs) / len(items) if items else None,
-        "accounting_complete_outputs": len(accounting_complete),
-        "accounting_complete_rate": (
-            len(accounting_complete) / len(completed) if completed else None
-        ),
-        "fully_priced_output_rate": (len(accounting_complete) / len(items) if items else None),
-        "unpriced_cancelled_controller_calls": unpriced_controller_calls,
-        "unpriced_cancelled_retrieval_calls": unpriced_retrieval_calls,
-        "unpriced_controller_timeout_calls": unpriced_controller_timeouts,
-        "unpriced_controller_failure_calls": unpriced_controller_failures,
-        "unpriced_retrieval_timeout_calls": unpriced_retrieval_timeouts,
-        "unpriced_retrieval_failure_calls": unpriced_retrieval_failures,
-        "unpriced_local_tool_calls": unpriced_local_tool_calls,
-        "cost_metric_status": (
-            "complete"
-            if len(costs) == len(items) == len(accounting_complete)
-            else "lower_bound_non_final"
-        ),
-        "observed_cost_usd": sum(costs),
-        "minimum_mean_cost_per_output_usd": sum(costs) / len(items) if items else None,
-        "mean_cost_usd": mean(costs),
         "post_commit_throughput_queries_per_minute": (
             len(completed) * 60_000 / sum(post_commit_wall)
             if completed and sum(post_commit_wall) > 0
@@ -742,17 +675,6 @@ def paired_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
 
     ttft_delta = delta(lambda item: float(item["timing"]["submit_to_first_token_ms"]))
     total_delta = delta(lambda item: float(item["timing"]["total_response_ms"]))
-    accounting_complete_pairs = [
-        pair
-        for pair in complete_pairs
-        if pair["naive"]["estimated_cost_usd"].get("accounting_complete") is True
-        and pair["stream"]["estimated_cost_usd"].get("accounting_complete") is True
-    ]
-    cost_delta = [
-        float(pair["stream"]["estimated_cost_usd"]["total"])
-        - float(pair["naive"]["estimated_cost_usd"]["total"])
-        for pair in accounting_complete_pairs
-    ]
     call_delta = delta(lambda item: float(item["usage"]["calls"]))
     relative_ttft = [
         (
@@ -779,11 +701,6 @@ def paired_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
             median(relative_ttft) * 100 if relative_ttft else None
         ),
         "median_stream_minus_naive_total_ms": median(total_delta),
-        "mean_stream_minus_naive_cost_usd": mean(cost_delta),
-        "cost_accounting_complete_pairs": len(accounting_complete_pairs),
-        "cost_accounting_complete_pair_rate": (
-            len(accounting_complete_pairs) / len(complete_pairs) if complete_pairs else None
-        ),
         "mean_stream_minus_naive_usage_accounted_calls": mean(call_delta),
         "mean_stream_minus_naive_accuracy": mean(accuracy_delta),
         "accuracy_pairs": {
@@ -843,10 +760,6 @@ def summarize(
     completed = [row for row in rows if "error" not in row]
     adjudicated = [row for row in completed if row["manual_adjudication"]]
     failures = len(rows) - len(completed)
-    accounting_incomplete = sum(
-        row.get("estimated_cost_usd", {}).get("accounting_complete") is not True
-        for row in completed
-    )
     run_integrity = run_integrity or {
         "status": "missing_or_incomplete",
         "issues": ["benchmark manifest was not validated"],
@@ -889,12 +802,6 @@ def summarize(
                 "automatic scoring is the required quick-benchmark gate; optional manual review "
                 "uses perfect/acceptable/missing/incorrect adjudication"
             ),
-            "cost": (
-                "mean_cost_usd covers completed outputs only. Failed outputs and cancelled "
-                "unpriced calls have unknown provider usage; observed totals and "
-                "minimum_mean_cost_per_output_usd are non-final lower bounds when "
-                "cost_metric_status is lower_bound_non_final"
-            ),
             "usage_accounted_model_calls": (
                 "counts calls represented in returned provider usage; controller attempts "
                 "without returned usage are reported separately and are not silently counted"
@@ -930,20 +837,10 @@ def summarize(
             "outputs": len(rows),
             "completed_outputs": len(completed),
             "failures": failures,
-            "accounting_incomplete_outputs": accounting_incomplete,
             "adjudicated_outputs": len(adjudicated),
             "requirement": (
                 "validated gold-blind run and offline evaluation freeze with zero failures; "
-                "provider-cost accounting and manual adjudication are independent gates"
-            ),
-        },
-        "cost_accounting_gate": {
-            "status": "complete" if accounting_incomplete == 0 else "lower_bound_non_final",
-            "completed_outputs": len(completed),
-            "accounting_incomplete_outputs": accounting_incomplete,
-            "requirement": (
-                "complete only when every completed output has provider usage for every "
-                "attempt; otherwise reported cost is an observed lower bound"
+                "manual adjudication is an independent gate"
             ),
         },
         "paired": paired_summary(rows),
@@ -987,10 +884,6 @@ def percent(value: float | None) -> float | None:
     return value * 100 if value is not None else None
 
 
-def money(value: float | None, digits: int = 4) -> str:
-    return "—" if value is None else f"${value:.{digits}f}"
-
-
 def markdown(summary: dict[str, Any]) -> str:
     lines = [
         "# Benchmark summary",
@@ -1003,9 +896,8 @@ def markdown(summary: dict[str, Any]) -> str:
         "| Path | Completed | Failures | Automatic match proxy | Support+valid citation | "
         "Manual semantic P/A | "
         "Median TTFT | p95 TTFT | Median total | Pre-Send reuse | In-flight overlap | "
-        "Fallback | Usage-accounted calls/output | Cost/completed | Cost coverage | "
-        "Accounting complete |",
-        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+        "Fallback | Usage-accounted calls/output |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for path, values in summary["paths"].items():
         accuracy = display(percent(values["expected_answer_accuracy"]), "%", 1)
@@ -1016,10 +908,6 @@ def markdown(summary: dict[str, Any]) -> str:
         reuse = display(percent(values["speculative_reuse_rate"]), "%", 1)
         inflight = display(percent(values["inflight_postcommit_overlap_rate"]), "%", 1)
         fallback = display(percent(values["commit_fallback_rate"]), "%", 1)
-        cost_coverage = display(percent(values["cost_coverage"]), "%", 1)
-        accounting_coverage = display(percent(values["accounting_complete_rate"]), "%", 1)
-        if values["cost_metric_status"] != "complete":
-            cost_coverage += " lower-bound/non-final"
         lines.append(
             f"| {path} | {values['completed']} | {values['failures']} | "
             f"{accuracy} | {supported_correct} | {manual_correct} | "
@@ -1027,14 +915,12 @@ def markdown(summary: dict[str, Any]) -> str:
             f"{display(values['p95_ttft_ms'], ' ms')} | "
             f"{display(values['median_total_ms'], ' ms')} | "
             f"{reuse} | {inflight} | {fallback} | "
-            f"{display(values['mean_usage_accounted_model_calls'], '', 2)} | "
-            f"{money(values['mean_cost_usd'])} | {cost_coverage} | {accounting_coverage} |"
+            f"{display(values['mean_usage_accounted_model_calls'], '', 2)} |"
         )
     gate = summary["manual_grounding_gate"]
     integrity_gate = summary["run_integrity_gate"]
     adjudication_gate = summary["adjudication_integrity_gate"]
     final_gate = summary["final_completeness_gate"]
-    cost_gate = summary["cost_accounting_gate"]
     lines.extend(
         [
             "",
@@ -1046,8 +932,6 @@ def markdown(summary: dict[str, Any]) -> str:
             f"(SHA-256: {adjudication_gate.get('sha256') or 'missing'}).",
             f"Final completeness gate: **{final_gate['status']}** "
             f"({final_gate['failures']} failures; zero required).",
-            f"Cost accounting gate: **{cost_gate['status']}** "
-            f"({cost_gate['accounting_incomplete_outputs']} accounting-incomplete outputs).",
         ]
     )
     paired = summary["paired"]
@@ -1055,7 +939,6 @@ def markdown(summary: dict[str, Any]) -> str:
     paired_ttft = display(paired["median_stream_minus_naive_ttft_ms"], " ms")
     relative_ttft = display(paired["median_stream_minus_naive_ttft_percent"], "%", 1)
     paired_total = display(paired["median_stream_minus_naive_total_ms"], " ms")
-    paired_cost = display(paired["mean_stream_minus_naive_cost_usd"], " USD", 6)
     lines.extend(
         [
             "",
@@ -1066,9 +949,6 @@ def markdown(summary: dict[str, Any]) -> str:
             f"- Median Stream minus Naive TTFT: {paired_ttft}",
             f"- Median relative TTFT delta: {relative_ttft}",
             f"- Median Stream minus Naive total time: {paired_total}",
-            f"- Mean Stream minus Naive cost (fully accounted pairs only): {paired_cost}",
-            f"- Fully accounted cost pairs: {paired['cost_accounting_complete_pairs']} / "
-            f"{paired['completed_pairs']}",
             f"- Automatic-proxy discordance: {paired['accuracy_pairs']}",
             "",
             "## Stream evidence stages",

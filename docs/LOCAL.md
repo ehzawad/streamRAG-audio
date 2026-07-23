@@ -16,7 +16,7 @@ This is a **local backend**, not a claim of parity with any hosted model.
 | Generator | **Qwen3.5-9B** Q4_K_M via llama.cpp, OpenAI **Chat Completions** (`OpenAIChatModel`) — answer, trigger, and judge |
 | Embeddings | **bge-large-en-v1.5** (1024-d) via llama.cpp `--embedding` |
 | Thinking | Qwen3.5 is a reasoning model; disabled (`chat_template_kwargs.enable_thinking=false`) to keep answers in budget and tool transcripts clean |
-| Token cap | configurable `ANSWER_MAX_TOKENS` (2048) / `SUMMARY_MAX_TOKENS` (512) — sized to cover the reasoning trace plus the visible answer |
+| Token cap | configurable `ANSWER_MAX_TOKENS` (2048) / `SUMMARY_MAX_TOKENS` (512) — sized for the visible answer (plus the reasoning trace if thinking is enabled) |
 | Chunking | 256 / 32 (bge caps at 512 tokens; 400-token chunks overflow its tokenizer) |
 | Multi-turn | **contextual retrieval**: follow-up pronouns/ellipsis resolved from compact conversational state before retrieval (query text only; evidence stays turn-local), applied symmetrically to both paths |
 
@@ -80,4 +80,6 @@ deficit — placeholder citations — was a **prompt bug**, fixed cheaply, so Lo
 fine-tuning was **deferred** as not-yet-justified rather than assumed. Cheaper
 levers (citation few-shot, top-k/reranking, precision ladder) come first.
 
-CRAG data is CC BY-NC 4.0 (non-commercial); it is not vendored in this repo.
+CRAG data is CC BY-NC 4.0 (non-commercial). The full upstream dataset is not
+vendored here; a small CRAG-derived subset (`data/crag_eval/`) is committed for
+non-commercial research use — see `NOTICE`.

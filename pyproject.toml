@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "streamrag"
 version = "0.1.0"
-description = "Naive RAG vs StreamRAG for typed input"
+description = "Fully-local spoken-query RAG: a Model-Triggered Streaming-RAG cascade (Qwen3-TTS -> faster-whisper -> local Qwen3.5-9B) over a reused typed StreamRAG core"
 requires-python = ">=3.14,<3.15"
 dependencies = [
   "fastapi>=0.115,<1",

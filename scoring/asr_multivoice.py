@@ -48,7 +48,7 @@ def main() -> int:
         w = round(wer(m["gold_query"], hyp), 4)
         rows.append({"id": m["id"], "voice": m["voice"], "gold_query": m["gold_query"],
                      "gold_answer": m["gold_answer"], "alt_answers": m["alt_answers"],
-                     "endpoint_text": hyp, "wer": w, "keep": w <= 0.10})
+                     "endpoint_text": hyp, "wer": w})
     (OUT / "asr.jsonl").write_text("\n".join(json.dumps(r) for r in rows) + "\n")
     by_voice = {}
     for r in rows:

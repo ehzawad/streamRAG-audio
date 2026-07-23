@@ -23,7 +23,7 @@ def l2_normalize(matrix: np.ndarray) -> np.ndarray:
 class OpenAIEmbedder:
     def __init__(
         self,
-        model: str = "text-embedding-3-large",
+        model: str = "bge-large-en-v1.5",
         client: AsyncOpenAI | None = None,
         *,
         timeout_s: float = 45.0,
@@ -43,7 +43,10 @@ class OpenAIEmbedder:
                 max_retries=max_retries,
             )
         else:
-            self.client = AsyncOpenAI(timeout=timeout_s, max_retries=max_retries)
+            raise ValueError(
+                "OpenAIEmbedder requires a local embedding server: pass base_url "
+                "(the fully-local pipeline has no hosted embedding fallback)."
+            )
 
     async def embed(self, texts: Sequence[str]) -> tuple[np.ndarray, int]:
         if not texts:

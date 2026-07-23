@@ -1,9 +1,10 @@
 """Multi-voice robustness set: synthesize the CRAG queries in Qwen3-TTS's 9 timbres.
 
-An ADDITIVE robustness appendix (codex round 4: GO) — it does NOT replace CRAG-TTS-local
-(Chatterbox) or the shipped numbers. Full-crossed: every one of the 12 kept queries is
-rendered in ALL 9 CustomVoice timbres with a FIXED neutral style, so timbre is never
-confounded with question. Frozen: seed, style, speaker set, source(24k)+resampled(16k)
+The current headline spoken set (108 clips = 12 question clusters x 9 voices). Full-crossed:
+every one of the 12 kept queries is rendered in ALL 9 CustomVoice timbres with a FIXED
+neutral style, so timbre is never confounded with question. It superseded the prior
+single-voice Chatterbox baseline, which survives only as frozen evidence
+(runs/three_arm.json). Frozen: seed, style, speaker set, source(24k)+resampled(16k)
 hashes. Earned claim ceiling: "the retrieval advantage persisted across nine Qwen3-TTS
 synthetic timbres" — NOT human robustness or demographic coverage.
 

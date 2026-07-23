@@ -248,7 +248,6 @@ def public_configuration(
         "approval_status": contract["approval_status"],
         "allow_unreviewed_dataset": True,
         "serving_dataset_checksum": contract["serving_dataset_checksum"],
-        "openai_api_key_configured": bool(os.getenv("OPENAI_API_KEY")),
         "state_root": str(state_root),
         "instances": {
             instance.name: {
@@ -264,13 +263,11 @@ def public_configuration(
 
 
 def preflight(
-    args: argparse.Namespace, *, require_api_key: bool
+    args: argparse.Namespace,
 ) -> tuple[tuple[Instance, Instance], dict[str, Any]]:
     dataset_dir = args.dataset_dir.resolve()
     contract = require_dataset(dataset_dir)
     pair = instances(args)
-    if require_api_key and not os.getenv("OPENAI_API_KEY"):
-        raise RuntimeError("OPENAI_API_KEY is not configured in the environment or .env")
     print(
         json.dumps(
             public_configuration(dataset_dir, args.state_root.resolve(), pair, contract),
@@ -357,7 +354,7 @@ def inspect_instance(
 
 
 def command_sync(args: argparse.Namespace) -> None:
-    pair, contract = preflight(args, require_api_key=True)
+    pair, contract = preflight(args)
     dataset_dir = args.dataset_dir.resolve()
     state_root = args.state_root.resolve()
     state_root.mkdir(parents=True, exist_ok=True)
@@ -382,7 +379,7 @@ def command_sync(args: argparse.Namespace) -> None:
 
 
 def command_serve(args: argparse.Namespace) -> None:
-    pair, contract = preflight(args, require_api_key=True)
+    pair, contract = preflight(args)
     dataset_dir = args.dataset_dir.resolve()
     services: list[ServiceProcess] = []
     try:
@@ -444,7 +441,7 @@ def main() -> None:
         parser.error("--startup-timeout-s must be positive")
     try:
         if args.command == "check":
-            preflight(args, require_api_key=False)
+            preflight(args)
         elif args.command == "sync":
             command_sync(args)
         else:

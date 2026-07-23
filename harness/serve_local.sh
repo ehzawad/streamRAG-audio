@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Bring up the two llama.cpp servers on the A5000 for streamRAG-audio's 3-arm eval:
+# Bring up the two llama.cpp servers on the A5000 for streamRAG-audio's local evaluations:
 #   :8400  Qwen3.5-9B Q4_K_M  (answer + trigger LLM, tool-calling via --jinja)
 #   :8401  bge-large-en-v1.5  (embeddings, mean pooling)
 # Both on GPU0 (A5000) by PCI order; the A6000 co-tenant is left alone.

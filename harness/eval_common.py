@@ -50,7 +50,7 @@ def _env(state_dir: Path) -> dict:
     state_dir.mkdir(parents=True, exist_ok=True)
     e = dict(os.environ)
     e.update(
-        PYTHONPATH=str(ROOT), LOCAL_MODE="1", ALLOW_UNREVIEWED_DATASET="1",
+        PYTHONPATH=str(ROOT), ALLOW_UNREVIEWED_DATASET="1",
         LLM_BASE_URL="http://127.0.0.1:8400/v1", EMBEDDING_BASE_URL="http://127.0.0.1:8401/v1",
         EMBEDDING_DIMENSIONS="1024", CHUNK_TOKENS="256", CHUNK_OVERLAP="32",
         QDRANT_PATH=str(state_dir / "qdrant"), RUNTIME_DB=str(state_dir / "runtime.sqlite3"),
@@ -91,8 +91,8 @@ def sync_corpus(base: str) -> int:
 
 
 # ------------------------------------------------------------------------- arms
-def _collect(client, base, run_id, t_commit):
-    parts, ttft = [], None
+def _collect(client, base, run_id):
+    parts = []
     with client.stream("GET", f"{base}/v1/runs/{run_id}/events") as s:
         for line in s.iter_lines():
             if not line or not line.startswith("data:"):
@@ -102,26 +102,22 @@ def _collect(client, base, run_id, t_commit):
             except json.JSONDecodeError:
                 continue
             if ev.get("type") == "answer.delta":
-                if ttft is None:
-                    ttft = (time.perf_counter() - t_commit) * 1000
                 parts.append(ev.get("text", ""))
             elif ev.get("type") in ("agent.persisted", "run.completed"):
                 break
-    return "".join(parts), (ttft if ttft is not None else -1.0)
+    return "".join(parts)
 
 
 def arm_naive(client, endpoint_text, query_time):
     tid, sid = str(uuid.uuid4()), "naive-" + uuid.uuid4().hex[:8]
-    t0 = time.perf_counter()
     r = client.post(f"{NAIVE}/v1/turns/{tid}/commit",
                     json={"session_id": sid, "revision": 1, "text": endpoint_text, "query_time": query_time})
     r.raise_for_status()
-    ans, ttft = _collect(client, NAIVE, r.json()["run_id"], t0)
-    return {"answer": ans, "ttft_ms": round(ttft, 1)}
+    return {"answer": _collect(client, NAIVE, r.json()["run_id"])}
 
 
 def arm_closed_book(jc, endpoint_text):
-    return {"answer": generate(jc, CLOSED_BOOK_SYSTEM, endpoint_text, max_tokens=96), "ttft_ms": None}
+    return {"answer": generate(jc, CLOSED_BOOK_SYSTEM, endpoint_text, max_tokens=96)}
 
 
 # ------------------------------------------------------------------------- score

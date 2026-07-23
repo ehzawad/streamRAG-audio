@@ -404,5 +404,5 @@ an item belongs in the evaluation set.
 - [ ] The 15 preselected support documents and 235 distractors are acceptable
 - [ ] Query, answer, split, and gold wrapper fields are absent from retrievable documents
 - [ ] Test labels remain scorer-only and are not available to either application path
-- [ ] The expected 1,000 chunks fit the local-Qdrant runtime target
+- [ ] The expected 1,514 chunks (256/32) fit the local-Qdrant runtime target
 - [ ] Every item review is complete and all requested corrections are resolved

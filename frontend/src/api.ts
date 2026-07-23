@@ -45,7 +45,6 @@ export type BackendEvent = {
   retrieval_completed_before_commit?: boolean;
   candidate?: boolean;
   commit_safe_exact?: boolean;
-  estimated_cost_usd?: { total: number; accounting_complete: boolean };
   persistence?: {
     status: string;
     elapsed_ms: number | null;
@@ -72,11 +71,7 @@ export type ServiceHealth = {
   index_matches_current_corpus: boolean;
   model: string;
   embedding_model: string;
-  reasoning_effort: string;
-  trigger_reasoning_effort?: string;
-  summary_reasoning_effort: string;
   settled_draft_delay_ms?: number;
-  service_tier: string;
   instance_id: string;
 };
 
@@ -93,11 +88,7 @@ export type ServiceDataStatus = {
   index_matches_current_corpus: boolean;
   model: string;
   embedding_model: string;
-  reasoning_effort: string;
-  trigger_reasoning_effort?: string;
-  summary_reasoning_effort: string;
   settled_draft_delay_ms?: number;
-  service_tier: string;
   configuration: Record<string, unknown>;
   config_hash: string;
   serving_dataset_checksum: string;
@@ -134,9 +125,6 @@ const COMMON_IDENTITY_FIELDS = [
   "indexed_desired_chunks",
   "model",
   "embedding_model",
-  "reasoning_effort",
-  "summary_reasoning_effort",
-  "service_tier",
   "configuration",
 ] as const satisfies readonly (keyof ServiceDataStatus)[];
 
@@ -222,12 +210,7 @@ function assertServiceContract(
   ) {
     throw new Error(`${implementation} reports an invalid snapshot capability`);
   }
-  const triggerFields = [
-    health.trigger_reasoning_effort,
-    health.settled_draft_delay_ms,
-    data.trigger_reasoning_effort,
-    data.settled_draft_delay_ms,
-  ];
+  const triggerFields = [health.settled_draft_delay_ms, data.settled_draft_delay_ms];
   if (implementation === "stream" && triggerFields.some((value) => value === undefined)) {
     throw new Error("stream does not advertise its typed-input configuration");
   }

@@ -85,9 +85,10 @@ path, bound to `data/crag_eval`.
 
 ## The audio pipeline
 
-The spoken-query evaluation (Qwen3-TTS synth → faster-whisper ASR → the streaming
-RAG core) is documented in [`AUDIO.md`](AUDIO.md); its reproduce block and the
-one-clip `make smoke-9b` end-to-end check live there.
+The spoken-query evaluation (Qwen3-TTS synth → faster-whisper ASR → the local RAG
+core; closed-book vs Naive-RAG headline, with the StreamRAG streaming coordinator
+exercised by the smoke test) is documented in [`AUDIO.md`](AUDIO.md); its reproduce
+block and the one-clip `make smoke-9b` end-to-end check live there.
 
 ## Verify the repository
 

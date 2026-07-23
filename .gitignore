@@ -37,16 +37,14 @@ comparison/benchmark/results/**
 
 # --- streamRAG-audio: audio front-end + eval ---
 .venv-audio/
-audio/__pycache__/
-arms/__pycache__/
-harness/__pycache__/
-scoring/__pycache__/
-demo/__pycache__/
+# (__pycache__/ is already ignored globally above.)
 # Publish the headline evidence (summary JSON) so every claimed number is verifiable,
 # but keep heavy/rebuildable service state and wavs out of git.
 runs/services/
 runs/serve/
 runs/**/*.wav
+# Generated ASR->RAG handoff for `make smoke-9b` (rebuilt every run).
+runs/smoke_9b_transcript.json
 # Qwen3-TTS multi-voice robustness set (CRAG-derived, non-commercial): never committed.
 data/audio_crag_qwen/wav24/
 data/audio_crag_qwen/wav16/

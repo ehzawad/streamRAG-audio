@@ -19,7 +19,7 @@ from shared.config import Settings
 from shared.data.crag import require_dataset_snapshot
 from shared.data.vector_store import IndexNotReadyError, QdrantVectorStore
 from shared.fingerprints import index_source_sha256_for_documents, runtime_fingerprints
-from shared.metrics import JsonlMetricLogger, model_cost
+from shared.metrics import JsonlMetricLogger
 from shared.models import InputSnapshot, SearchResult, Usage
 from shared.path import PathTelemetry, PathTurn, RagPath, cache_scope
 
@@ -516,11 +516,6 @@ class RagRuntime:
         )
         reuse_mode = retrieval.reuse_mode
         retrieval_embedding_tokens = retrieval.retrieval_embedding_tokens
-        tool_embedding_tokens = 0
-        incomplete_tool_traces: list[dict] = []
-        embedding_usd = (
-            retrieval_embedding_tokens * self.settings.embedding_input_per_million / 1_000_000
-        )
         await send(
             {
                 "type": "answer.started",
@@ -568,22 +563,6 @@ class RagRuntime:
             known_usage = Usage()
             known_usage.add(retrieval.controller_usage)
             known_usage.add(agent_usage)
-            known_model_usd = model_cost(known_usage, self.settings).total_usd
-            unpriced_generation_failures = int(not timed_out and answer_completed_ms is None)
-            unpriced_local_tools = (
-                len(incomplete_tool_traces) if tool_traces else tool_attempt_count
-            )
-            known_lower_bound = bool(
-                timed_out
-                or unpriced_generation_failures
-                or unpriced_local_tools
-                or retrieval.unpriced_trigger_cancellations
-                or retrieval.retrieval_cancellations
-                or retrieval.controller_timeouts
-                or retrieval.controller_failures
-                or retrieval.retrieval_timeouts
-                or retrieval.retrieval_failures
-            )
             await self.logger.write(
                 {
                     "schema_version": 2,
@@ -648,26 +627,6 @@ class RagRuntime:
                     },
                     "tool_traces": tool_traces,
                     "usage": asdict(known_usage),
-                    "estimated_cost_usd": {
-                        "model": known_model_usd,
-                        "query_embedding": embedding_usd,
-                        "total": known_model_usd + embedding_usd,
-                        "accounting_complete": False,
-                        "known_cost_lower_bound": known_lower_bound,
-                        "unpriced_generation_timeout_calls": int(timed_out),
-                        "unpriced_generation_failure_calls": unpriced_generation_failures,
-                        "unpriced_cancelled_controller_calls": (
-                            retrieval.unpriced_trigger_cancellations
-                        ),
-                        "unpriced_cancelled_retrieval_calls": (retrieval.retrieval_cancellations),
-                        "unpriced_controller_timeout_calls": retrieval.controller_timeouts,
-                        "unpriced_controller_failure_calls": retrieval.controller_failures,
-                        "unpriced_retrieval_timeout_calls": retrieval.retrieval_timeouts,
-                        "unpriced_retrieval_failure_calls": retrieval.retrieval_failures,
-                        "unpriced_local_tool_calls": unpriced_local_tools,
-                        "unpriced_post_answer_persistence": False,
-                        "unpriced_summary_timeout_calls": 0,
-                    },
                 }
             )
 
@@ -694,23 +653,6 @@ class RagRuntime:
                             tool_traces = event.get("tool_traces", [])
                             answer_completed_ms = time.perf_counter() * 1000
                             sources = self._merge_tool_sources(sources, tool_traces)
-                            tool_embedding_tokens = sum(
-                                int(trace.get("embedding_tokens") or 0) for trace in tool_traces
-                            )
-                            incomplete_tool_traces = [
-                                trace
-                                for trace in tool_traces
-                                if trace.get("accounting_complete") is not True
-                            ]
-                            embedding_usd = (
-                                (retrieval_embedding_tokens + tool_embedding_tokens)
-                                * self.settings.embedding_input_per_million
-                                / 1_000_000
-                            )
-                            ready_usage = Usage()
-                            ready_usage.add(retrieval.controller_usage)
-                            ready_usage.add(agent_usage)
-                            ready_model_usd = model_cost(ready_usage, self.settings).total_usd
                             await send(
                                 {
                                     "type": "answer.ready",
@@ -743,13 +685,6 @@ class RagRuntime:
                                         "commit_fallbacks": retrieval.commit_fallbacks,
                                     },
                                     "tool_traces": tool_traces,
-                                    "estimated_cost_usd": {
-                                        "model": ready_model_usd,
-                                        "query_embedding": embedding_usd,
-                                        "total": ready_model_usd + embedding_usd,
-                                        "accounting_complete": False,
-                                        "unpriced_post_answer_persistence": True,
-                                    },
                                 }
                             )
                         else:
@@ -840,20 +775,6 @@ class RagRuntime:
         usage.add(retrieval.controller_usage)
         usage.add(agent_usage)
         usage.add(persistence_usage)
-        model_usd = model_cost(usage, self.settings).total_usd
-        embedding_tokens = retrieval_embedding_tokens + tool_embedding_tokens
-        embedding_usd = embedding_tokens * self.settings.embedding_input_per_million / 1_000_000
-        accounting_complete = (
-            retrieval.unpriced_trigger_cancellations == 0
-            and retrieval.retrieval_cancellations == 0
-            and retrieval.controller_timeouts == 0
-            and retrieval.controller_failures == 0
-            and retrieval.retrieval_timeouts == 0
-            and retrieval.retrieval_failures == 0
-            and not incomplete_tool_traces
-            and persistence_status == "completed"
-            and summary_accounting_complete
-        )
         timing = {
             "submit_to_first_token_ms": (
                 first_token_ms - committed_ms if first_token_ms is not None else None
@@ -940,21 +861,6 @@ class RagRuntime:
             },
             "tool_traces": tool_traces,
             "usage": asdict(usage),
-            "estimated_cost_usd": {
-                "model": model_usd,
-                "query_embedding": embedding_usd,
-                "total": model_usd + embedding_usd,
-                "accounting_complete": accounting_complete,
-                "unpriced_cancelled_controller_calls": (retrieval.unpriced_trigger_cancellations),
-                "unpriced_cancelled_retrieval_calls": retrieval.retrieval_cancellations,
-                "unpriced_controller_timeout_calls": retrieval.controller_timeouts,
-                "unpriced_controller_failure_calls": retrieval.controller_failures,
-                "unpriced_retrieval_timeout_calls": retrieval.retrieval_timeouts,
-                "unpriced_retrieval_failure_calls": retrieval.retrieval_failures,
-                "unpriced_local_tool_calls": len(incomplete_tool_traces),
-                "unpriced_post_answer_persistence": persistence_status != "completed",
-                "unpriced_summary_timeout_calls": unpriced_summary_timeout_calls,
-            },
         }
         await self.logger.write(record)
         self.counters.path_completions += 1
@@ -973,7 +879,6 @@ class RagRuntime:
                 "persistence": record["persistence"],
                 "tool_traces": tool_traces,
                 "usage": record["usage"],
-                "estimated_cost_usd": record["estimated_cost_usd"],
             }
         )
 

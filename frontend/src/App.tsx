@@ -27,8 +27,6 @@ type PanelState = {
   status: string;
   firstToken: number | null;
   total: number | null;
-  cost: number | null;
-  accountingComplete: boolean | null;
   retrievalLead: number | null;
   candidateRetrievalLead: number | null;
   reuseMode: string | null;
@@ -69,8 +67,6 @@ const emptyPanel = (status: string): PanelState => ({
   status,
   firstToken: null,
   total: null,
-  cost: null,
-  accountingComplete: null,
   retrievalLead: null,
   candidateRetrievalLead: null,
   reuseMode: null,
@@ -419,9 +415,6 @@ export function App({ mode }: { mode: PathName }) {
             status: "Complete",
             firstToken: event.timing?.submit_to_first_token_ms ?? panel.firstToken,
             total: event.timing?.total_response_ms ?? panel.total,
-            cost: event.estimated_cost_usd?.total ?? panel.cost,
-            accountingComplete:
-              event.estimated_cost_usd?.accounting_complete ?? panel.accountingComplete,
             retrievalLead:
               event.timing?.accepted_retrieval_lead_at_commit_ms ?? panel.retrievalLead,
             candidateRetrievalLead:
@@ -881,7 +874,6 @@ function CompareSummary({ naive, stream }: { naive: PanelState; stream: PanelSta
         <div className="deltas" aria-label="StreamRAG minus Naive RAG">
           <Delta label="TTFT" value={difference(stream.firstToken, naive.firstToken, "ms")} />
           <Delta label="Total" value={difference(stream.total, naive.total, "ms")} />
-          <Delta label="Cost" value={costDifference(stream, naive)} />
           <Delta label="Evidence docs" value={signed(uniqueSourceCount(stream.sources) - uniqueSourceCount(naive.sources))} />
           <Delta label="Calls" value={difference(streamCalls, naiveCalls)} />
         </div>
@@ -913,7 +905,6 @@ function ResultPanel({
       <div className="metrics">
         <Metric label="Path TTFT" value={panel.firstToken === null ? "—" : `${panel.firstToken.toFixed(0)} ms`} />
         <Metric label="Total" value={panel.total === null ? "—" : `${panel.total.toFixed(0)} ms`} />
-        <Metric label="Cost" value={panel.cost === null ? "—" : panel.accountingComplete === false ? `≥$${panel.cost.toFixed(4)} partial` : `$${panel.cost.toFixed(4)}`} />
         <Metric label="Accepted lead" value={panel.retrievalLead == null ? "—" : `${panel.retrievalLead.toFixed(0)} ms`} />
         <Metric label="Retrieval-ready lead" value={panel.candidateRetrievalLead == null ? "—" : `${panel.candidateRetrievalLead.toFixed(0)} ms`} />
         <Metric label="Evidence" value={evidenceLabel(path, panel)} />
@@ -984,13 +975,6 @@ function difference(left: number | null, right: number | null, unit = "") {
   if (left === null || right === null) return "—";
   const value = left - right;
   return `${signed(Math.round(value))}${unit ? ` ${unit}` : ""}`;
-}
-
-function costDifference(left: PanelState, right: PanelState) {
-  if (left.cost === null || right.cost === null) return "—";
-  if (left.accountingComplete !== true || right.accountingComplete !== true) return "partial";
-  const value = left.cost - right.cost;
-  return `${value >= 0 ? "+" : "−"}$${Math.abs(value).toFixed(4)}`;
 }
 
 function signed(value: number) {

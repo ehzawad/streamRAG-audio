@@ -4,17 +4,21 @@ A single-A5000 **cascaded emulation of the *Model-Triggered Streaming RAG contro
 policy*** from *Stream RAG: Instant and Accurate Spoken Dialogue Systems with
 Streaming Tool Usage* (Arora et al., Meta + CMU, [arXiv:2510.02044](https://arxiv.org/abs/2510.02044)),
 applied to spoken CRAG queries. It reuses this author's own prior work:
-[streamRAG](https://github.com/ehzawad/streamRAG) (typed streaming RAG),
+[streamRAG](https://github.com/ehzawad/streamRAG) (typed streaming RAG) and
 [streamrag-local](https://github.com/ehzawad/streamrag-local) (its fully-local
-variant; this repo's base), and the Silero-VAD turn/barge-in logic from
-[omni-voice-lab](https://github.com/ehzawad/omni-voice-lab).
+variant; this repo's base). The Silero-VAD turn/barge-in logic from
+[omni-voice-lab](https://github.com/ehzawad/omni-voice-lab) was used only by the
+now-retired Chatterbox live demo, not the current offline pipeline.
 
 ## What this is — and is NOT
 
 **Is:** a cascade — spoken CRAG query is synthesized offline (Qwen3-TTS) →
-transcribed by faster-whisper `base.en` → the transcript feeds the reused typed
-streaming-RAG core (`StreamCoordinator` trigger fires *speculative* retrieval over a
-local CRAG corpus → commit → grounded answer from local **Qwen3.5-9B (llama.cpp)**).
+transcribed by faster-whisper `base.en` → the transcript feeds the reused local RAG
+core (grounded answer from local **Qwen3.5-9B (llama.cpp)** over a local CRAG corpus).
+The **headline** number compares closed-book vs Naive-RAG (retrieval off/on) across
+the nine voices; the full **StreamRAG** streaming coordinator (`StreamCoordinator`
+trigger → *speculative* retrieval → exact-match commit) is exercised end-to-end by the
+one-clip `make smoke-9b` test and preserved as the frozen three-arm baseline.
 The paper explicitly notes its Model-Triggered method is **modality-agnostic and
 applies to typed input**; this implements that control policy behind an ASR
 front-end. (An earlier Chatterbox-era live demo added a VAD endpoint + streaming
@@ -42,7 +46,7 @@ RAG evaluation pipeline.)
 |---|---|---|
 | Query synthesis | Qwen3-TTS CustomVoice, 9 voices (offline, GPU sole-tenant) | `audio/synth_qwen.py` (new) |
 | ASR | faster-whisper `base.en` int8 (CPU) | `scoring/asr_multivoice.py` (new) |
-| Trigger / speculation | `stream/trigger.py::ModelTrigger` + `stream/coordinator.py` | **imported unchanged** |
+| Trigger / speculation | `stream/trigger.py::ModelTrigger` + `stream/coordinator.py` | trigger **adapted** to Chat Completions; coordinator imported unchanged |
 | Retrieval | bge-large-en-v1.5 (GGUF, :8401) + Qdrant | imported |
 | Answer / judge | Qwen3.5-9B Q4_K_M (llama.cpp, :8400), grounded agent | imported |
 

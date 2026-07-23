@@ -8,9 +8,9 @@ faster-whisper ASR front-end and **Qwen3-TTS** (9 voices) offline query synthesi
 (A single-voice Chatterbox set was the prior baseline; kept only as frozen evidence.)
 
 Built on this author's own [streamrag-local](https://github.com/ehzawad/streamrag-local)
-(local variant of [streamRAG](https://github.com/ehzawad/streamRAG)); the streaming
-audio/turn logic is reused from [omni-voice-lab](https://github.com/ehzawad/omni-voice-lab).
-Both source repos are left untouched.
+(local variant of [streamRAG](https://github.com/ehzawad/streamRAG)); the retired
+Chatterbox live demo reused [omni-voice-lab](https://github.com/ehzawad/omni-voice-lab)'s
+Silero-VAD turn logic. Both source repos are left untouched.
 
 ## The honest headline
 

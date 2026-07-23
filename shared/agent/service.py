@@ -274,7 +274,7 @@ class GroundedAgent:
                 asyncio.get_running_loop().time() + self.settings.post_answer_persistence_timeout_s
             )
             try:
-                # End the response-generation phase before remote summary or SQLite
+                # End the response-generation phase before summary-model or SQLite
                 # work. Preparing the raw turn first keeps this boundary fast while
                 # making an immediate caller cancellation/aclose recoverable.
                 yield {

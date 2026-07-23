@@ -97,10 +97,9 @@ source and dataset fingerprints, index readiness, and distinct process/state
 identity.
 
 Common metrics cover first-token and total latency, completion/failure, retrieval,
-answer/support/citation proxies, token usage, accounting coverage, and observed
-cost. StreamRAG separately reports trigger calls, speculation, evidence lead,
-reuse, stale work, cancellation, and fallback. Missing provider usage is marked
-as a lower bound, never counted as zero.
+answer/support/citation proxies, and token usage (no provider dollar cost — the
+pipeline is fully local). StreamRAG separately reports trigger calls, speculation,
+evidence lead, reuse, stale work, cancellation, and fallback.
 
 Gold is not read by either service or by the single benchmark runner. The offline
 scorer reads it only after predictions are finalized and hashed. Automatic answer

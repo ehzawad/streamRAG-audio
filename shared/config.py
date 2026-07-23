@@ -45,17 +45,19 @@ class Settings:
     openai_embedding_max_retries: int = int(os.getenv("OPENAI_EMBEDDING_MAX_RETRIES", "0"))
     allow_unreviewed_dataset: bool = env_bool("ALLOW_UNREVIEWED_DATASET", False)
 
-    chunk_tokens: int = int(os.getenv("CHUNK_TOKENS", "400"))
-    chunk_overlap: int = int(os.getenv("CHUNK_OVERLAP", "50"))
+    # bge-large-en-v1.5 tops out at 512 tokens, so chunks stay at 256/32
+    # (400/50 would overflow the embedder's tokenizer).
+    chunk_tokens: int = int(os.getenv("CHUNK_TOKENS", "256"))
+    chunk_overlap: int = int(os.getenv("CHUNK_OVERLAP", "32"))
     retrieve_candidates: int = int(os.getenv("RETRIEVE_CANDIDATES", "8"))
     top_k: int = int(os.getenv("TOP_K", "5"))
     context_token_budget: int = int(os.getenv("CONTEXT_TOKEN_BUDGET", "2600"))
     history_token_budget: int = int(os.getenv("HISTORY_TOKEN_BUDGET", "2200"))
     history_keep_turns: int = int(os.getenv("HISTORY_KEEP_TURNS", "4"))
-    # Generation caps. Local reasoning ("thinking") models spend tokens on a
-    # reasoning trace before the visible answer, so the answer cap must cover
-    # both. Configurable; defaults raised from the original 600/320 (which were
-    # sized for a non-thinking hosted model) so a local thinker can finish.
+    # Generation caps. With DISABLE_THINKING=1 (the shipped default) the model
+    # emits only the visible answer; if thinking is enabled the cap must also
+    # cover the reasoning trace. Configurable; defaults raised from the original
+    # 600/320 (sized for a non-thinking model) so a local thinker can finish.
     answer_max_tokens: int = int(os.getenv("ANSWER_MAX_TOKENS", "2048"))
     summary_max_tokens: int = int(os.getenv("SUMMARY_MAX_TOKENS", "512"))
 
@@ -78,14 +80,6 @@ class Settings:
         ).split(",")
         if item.strip()
     )
-
-    # Standard API prices checked 2026-07-17. Returned usage is logged; explicit
-    # unpriced counters identify interrupted calls whose final usage is unavailable.
-    sol_input_per_million: float = 5.0
-    sol_cache_write_per_million: float = 6.25
-    sol_cached_input_per_million: float = 0.5
-    sol_output_per_million: float = 30.0
-    embedding_input_per_million: float = 0.13
 
     def validate(self) -> None:
         # Fully-local serving contract: a local OpenAI-compatible LLM and a

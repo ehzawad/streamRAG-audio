@@ -15,9 +15,9 @@ or that override, but there is no sealed/final-run ceremony and no
 |---|---|
 | Source | pinned CRAG Task 1/2 development release |
 | Knowledge base | 250 complete cleaned documents |
-| Vector index | exactly 1,000 Qdrant points per path |
-| Chunking | 400 tokens with 50-token overlap |
-| Embeddings | `text-embedding-3-large`, 3,072 dimensions |
+| Vector index | 1,514 Qdrant points per path (configuration-derived) |
+| Chunking | 256 tokens with 32-token overlap |
+| Embeddings | `bge-large-en-v1.5`, 1,024 dimensions |
 | Development questions | 5 visible rows |
 | Final questions | 10 held-out rows |
 
@@ -48,7 +48,7 @@ bzcat data/crag_eval/documents.jsonl.bz2 \
 
 `shared/data/crag.py` verifies and loads these rows. `chunk_documents` performs
 the deterministic split, and each API's `/v1/data/sync` endpoint embeds and
-upserts the resulting 1,000 chunks into its own Qdrant service.
+upserts the resulting 1,514 chunks into its own Qdrant service.
 
 ## File roles
 
@@ -92,7 +92,7 @@ the review; it does not change any status or trigger any automated step.
 
 The corpus is checksum-bound by `checksums.sha256`. Each service verifies those
 checksums when it loads the dataset (`capture_dataset_snapshot`), covering all
-bound files, the 250 source rows, and deterministic chunking to the 1,000-point
+bound files, the 250 source rows, and deterministic chunking to the 1,514-point
 target, so no separate verification command is required. There is a single
 benchmark flow: the runner (`make benchmark`) writes and finalizes predictions
 before the offline scorer reads any gold, and `make score` binds `test_gold.jsonl`

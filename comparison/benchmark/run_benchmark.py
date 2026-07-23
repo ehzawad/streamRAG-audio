@@ -453,7 +453,6 @@ async def replay_path(
                     "sources": event.get("sources") or answer_started_sources,
                     "timing": event["timing"],
                     "usage": event["usage"],
-                    "estimated_cost_usd": event["estimated_cost_usd"],
                     "retrieval": event.get("retrieval", {}),
                     "controller": event.get("controller", {}),
                     "reuse": event.get("reuse", {}),
