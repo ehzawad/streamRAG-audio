@@ -1,5 +1,30 @@
 # Changelog
 
+## Consolidate to one clean local pipeline (strip rejected experiments)
+
+Reduced the repo to a single fully-local pipeline and one retained result bundle
+(`runs/{multivoice,three_arm,prefill_warm}.json`). Removed the rejected/retired code and
+their result JSON; docs now describe only the local 9B stack (no hosted-mode / `LOCAL_MODE`
+toggle). Added `make smoke-9b` (`harness/smoke_9b.py`): a two-venv one-clip end-to-end
+smoke — faster-whisper `base.en` WER gate, then `/v1/health` alias check + snapshot/commit
+(local-Chat-Completions trigger) + retrieval + grounded "Jobs" answer against an isolated
+stream service.
+
+**Rejected / retired experiments** (recorded so the history stays honest; none is in the
+live pipeline — see `docs/AUDIO.md`):
+
+- **Qwen3.6-27B** answer/judge upgrade — RAG 0.907, retrieval gap **+0.269**, question-clustered
+  CI **[0.00, 0.57]**, positive on **7/9** voices → **reverted to 9B** (which gives gap +0.51,
+  9/9, CI excluding 0; the larger model *weakened* the headline and its CI touched 0).
+- **Nemotron-3.5** ASR — WER **0.076** vs faster-whisper `base.en` **0.057** → **rejected**
+  (failed the WER gate); `large-v3-turbo` tied base.en → **no ASR change**.
+- **Pre-Send answering** — below the **≥ 80 %** ready-before-commit gate on audio → **removed**
+  (gated experiment that never cleared the readiness gate on spoken input).
+- **Chatterbox streaming front-end** (VAD + ASR-partials + LocalAgreement-2 stabilizer + the
+  ASR-churn gate) — **retired** with the Chatterbox live demo; the single-voice Chatterbox
+  three-arm result (`runs/three_arm.json`) is kept as frozen evidence, its driver and the
+  ASR-churn result JSON are not.
+
 ## Qwen3-TTS 9-voice headline (replaces single-voice as the accuracy headline)
 
 - New spoken set: the 12 CRAG questions rendered in **all 9 Qwen3-TTS CustomVoice timbres**
@@ -36,9 +61,9 @@ New work layered on the streamrag-local base (imported unchanged):
   fully re-prefill), so there is no prefill-warming lever; the earlier TTFT gap was a
   GPU-scheduling artifact. Net: neither streaming trick reduces TTFT on this stack — a
   useful negative about hybrid/recurrent LLMs. `scoring/prefill_warm.py`, `docs/AUDIO.md`.
-- **Fix**: `stream/trigger.py` used the OpenAI Responses API (not implemented by llama.cpp)
-  → the stream service could not start in `LOCAL_MODE`; switched to Chat Completions +
-  `enable_thinking=false`, mirroring the answer agent.
+- **Fix**: `stream/trigger.py` targeted the OpenAI Responses API (not implemented by
+  llama.cpp) → the stream service could not start locally; switched to Chat Completions +
+  `enable_thinking=false`, mirroring the answer agent, so the trigger runs on the local server.
 
 ---
 
@@ -120,9 +145,10 @@ Make the pipeline run fully on one box (no hosted API), proven end-to-end.
 
 Generator:
 - openai_client.py: add chat_model() building an OpenAI-compatible Chat
-  Completions model. In LOCAL_MODE it targets a local llama.cpp server
-  (Qwen3.5-9B) at LLM_BASE_URL; hosted mode targets OpenAI chat completions.
-  Keep responses_model() for the frozen baseline.
+  Completions model against a local llama.cpp server (Qwen3.5-9B) at LLM_BASE_URL.
+  (This original commit still carried the hosted Responses path for a frozen
+  baseline; the later local-only consolidation removed it — the repo now has one
+  local Chat-Completions path via chat_model(), and no hosted toggle.)
 - service.py / summary_skill.py: migrate OpenAIResponsesModel(+Settings) ->
   OpenAIChatModel(+Settings). Drop Responses-only knobs (reasoning_effort,
   service_tier, prompt_cache_key, store, verbosity). Qwen3.5 is a reasoning

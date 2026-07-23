@@ -37,15 +37,16 @@ testable by itself.
 
 1. `checksums.sha256` binds the committed dataset files.
 2. `documents.jsonl.bz2` supplies 250 complete document rows.
-3. The shared chunker creates 400-token chunks with 50-token overlap.
-4. `text-embedding-3-large` creates 3,072-dimensional vectors.
-5. Each path writes the same 1,000 chunks to its own Qdrant collection.
+3. The shared chunker creates 256-token chunks with 32-token overlap (bge caps at
+   512 tokens; 400-token chunks overflow its tokenizer).
+4. Local **bge-large-en-v1.5** (llama.cpp `:8401`) creates 1,024-dimensional vectors.
+5. Each path writes the same chunk set to its own Qdrant collection (the count is
+   corpus- and chunker-specific).
 6. Index readiness requires matching checksums, source fingerprint, pipeline
    version, desired count, and physical point count.
 
-Compose runs two private Qdrant servers. `qdrant-naive` is visible only to the
-Naive API on `naive-data`; `qdrant-stream` is visible only to StreamRAG on
-`stream-data`. Neither Qdrant port is published to the host.
+Each service runs its own embedded local Qdrant under `./var/<role>/qdrant`; the
+two paths never share a collection.
 
 ## Typed request flow
 
@@ -70,15 +71,14 @@ The frontend holds at most one active snapshot request plus one replaceable
 latest draft. Send cancels obsolete snapshot transport without waiting. Compare
 starts both commits concurrently but preserves separate backend sessions.
 
-Snapshot delta analysis runs through a Rust native `SnapshotAnalyzer` backend
-(`native/snapshot_delta/`, PyO3 module `streamrag_snapshot`) with a pure-Python
-fallback in `stream/snapshot.py`; build and benchmark it with `make native` and
-`make bench-native`.
+Snapshot delta analysis runs through the pure-Python `SnapshotAnalyzer` in
+`stream/snapshot.py`.
 
 ## Agent, tool, and memory
 
-- Answer model: `gpt-5.6-sol`, medium reasoning.
-- Trigger and memory summary: low reasoning.
+- Answer / trigger / judge model: local **Qwen3.5-9B** (llama.cpp `:8400`),
+  reasoning ("thinking") disabled to keep answers in budget and tool transcripts clean.
+- Trigger and memory summary run on the same local model.
 - Primary retrieval: 8 candidates, 5 answer-context chunks, cosine search.
 - Dynamic tool: strict read-only PydanticAI `search_local_crag`, limited to one
   model-issued call when primary evidence is insufficient.
@@ -108,25 +108,23 @@ and citation checks are not presented as human semantic accuracy.
 
 ## State and concurrency
 
-The Docker stack has four persistent volumes: one Qdrant index and one embedded
-SQLite/runtime volume per path. SQLite is a library inside each API image, not a
-separate server. Ordinary `docker compose down` removes containers and networks
-but preserves all four volumes.
+Each service keeps its generated state under `./var/<role>/`: one embedded Qdrant
+index and one SQLite runtime DB per path. SQLite is a library inside each process,
+not a separate server.
 
-FastAPI, OpenAI, and networked Qdrant operations are asynchronous. Standalone and
-headless embedded-Qdrant mode moves synchronous vector work off the event loop.
-This supports a responsive local evaluation; it is not a production concurrency
-or tenancy claim.
+FastAPI and the calls out to the local model servers are asynchronous; embedded
+Qdrant work is moved off the event loop. This supports a responsive local
+evaluation; it is not a production concurrency or tenancy claim.
 
 ## Security and deployment boundary
 
 The supplied stack is local-only and unauthenticated. Host ports bind to
-`127.0.0.1`; the browser uses one frontend origin, and the OpenAI key remains in
-the API environments. `.env`, generated indexes, SQLite, sessions, logs, and
-metrics are excluded from Git. The fixed corpus and evaluation metadata are
-intentionally committed.
+`127.0.0.1`; the browser uses one frontend origin; the model servers are local and
+loopback-only. `.env`, generated indexes, SQLite, sessions, logs, and metrics are
+excluded from Git. The fixed corpus and evaluation metadata are intentionally
+committed.
 
-Anyone who can reach an API can submit requests, consume OpenAI budget, and read
+Anyone who can reach an API can submit requests, consume local GPU budget, and read
 results. A public deployment therefore needs TLS, authentication and authorization,
 principal-bound sessions, rate and spend limits, protected index administration,
 secret management, backups, retention, abuse monitoring, and load/security tests.

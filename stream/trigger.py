@@ -4,9 +4,9 @@ import time
 from dataclasses import dataclass
 
 from pydantic_ai import Agent, ToolOutput, UsageLimits
-from pydantic_ai.models.openai import OpenAIChatModelSettings, OpenAIResponsesModelSettings
+from pydantic_ai.models.openai import OpenAIChatModelSettings
 
-from shared.agent.openai_client import chat_model, responses_model
+from shared.agent.openai_client import chat_model
 from shared.agent.service import thinking_extra_body
 from shared.agent.summary_skill import pydantic_usage
 from shared.models import TriggerDecision, Usage
@@ -52,27 +52,15 @@ Precision rules:
 class ModelTrigger:
     def __init__(self, settings: StreamSettings):
         self.settings = settings
-        # LOCAL_MODE targets llama.cpp, which speaks Chat Completions (with tool
-        # calls) but NOT the Responses API — so the trigger must use chat_model()
-        # locally, mirroring the answer agent. responses_model() is hosted-only.
-        if settings.local_mode:
-            model, self._client = chat_model(settings, timeout_s=settings.trigger_timeout_s)
-            model_settings = OpenAIChatModelSettings(
-                parallel_tool_calls=False,
-                temperature=0.0,
-                max_tokens=120,
-                extra_body=thinking_extra_body(settings),
-            )
-        else:
-            model, self._client = responses_model(settings, timeout_s=settings.trigger_timeout_s)
-            model_settings = OpenAIResponsesModelSettings(
-                openai_reasoning_effort=settings.trigger_reasoning_effort,
-                openai_reasoning_mode="standard",
-                openai_service_tier=settings.openai_service_tier,
-                openai_store=False,
-                openai_text_verbosity="low",
-                max_tokens=120,
-            )
+        # The local llama.cpp server speaks Chat Completions (with tool calls),
+        # so the trigger uses chat_model(), mirroring the answer agent.
+        model, self._client = chat_model(settings, timeout_s=settings.trigger_timeout_s)
+        model_settings = OpenAIChatModelSettings(
+            parallel_tool_calls=False,
+            temperature=0.0,
+            max_tokens=120,
+            extra_body=thinking_extra_body(settings),
+        )
         self.agent = Agent(
             model,
             name="streamrag_trigger",

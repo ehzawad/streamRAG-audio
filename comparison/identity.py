@@ -6,9 +6,6 @@ from typing import Any
 SHARED_IDENTITY_FIELDS = (
     "model",
     "embedding_model",
-    "reasoning_effort",
-    "summary_reasoning_effort",
-    "service_tier",
     "indexed_chunks",
     "index_checksum",
     "index_source_sha256",

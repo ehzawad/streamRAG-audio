@@ -25,11 +25,9 @@ class Settings:
     runtime_db: Path = Path(os.getenv("RUNTIME_DB", ROOT / "data" / "runtime.sqlite3"))
     metrics_log: Path = Path(os.getenv("METRICS_LOG", ROOT / "var" / "requests.jsonl"))
 
-    # Local-serving mode: fully on-box, no hosted API. When true the answer
-    # model is an OpenAI-compatible local server (llama.cpp serving Qwen3.5-9B)
-    # and embeddings come from a local embedder; the hosted-model locks in
-    # validate() are relaxed. Set LOCAL_MODE=0 to restore the hosted baseline.
-    local_mode: bool = env_bool("LOCAL_MODE", True)
+    # Fully on-box serving, no hosted API. The answer model is an
+    # OpenAI-compatible local server (llama.cpp serving Qwen3.5-9B) and
+    # embeddings come from a local embedder.
     llm_base_url: str = os.getenv("LLM_BASE_URL", "http://127.0.0.1:8400/v1")
     llm_api_key: str = os.getenv("LLM_API_KEY", "local")
     # Qwen3.5 is a reasoning ("thinking") model; disabling thinking keeps the
@@ -39,12 +37,6 @@ class Settings:
 
     openai_model: str = os.getenv("OPENAI_MODEL", "qwen3.5-9b-local")
     embedding_model: str = os.getenv("OPENAI_EMBEDDING_MODEL", "bge-large-en-v1.5")
-    # Medium is the quality/latency balance for grounded answers. History
-    # compression remains deliberately low effort. (Hosted-mode only; the local
-    # chat model ignores reasoning-effort settings.)
-    reasoning_effort: str = os.getenv("REASONING_EFFORT", "medium")
-    summary_reasoning_effort: str = os.getenv("SUMMARY_REASONING_EFFORT", "low")
-    openai_service_tier: str = os.getenv("OPENAI_SERVICE_TIER", "default")
     qdrant_url: str | None = os.getenv("QDRANT_URL") or None
     qdrant_api_key: str | None = os.getenv("QDRANT_API_KEY") or None
     qdrant_collection: str = os.getenv("QDRANT_COLLECTION", "crag_chunks")
@@ -96,36 +88,20 @@ class Settings:
     embedding_input_per_million: float = 0.13
 
     def validate(self) -> None:
-        if self.local_mode:
-            # Fully-local mode: the hosted-model identity locks do not apply.
-            # Validate the local serving contract instead.
-            if not self.llm_base_url:
-                raise ValueError("LOCAL_MODE requires LLM_BASE_URL (local OpenAI-compatible LLM)")
-            if not self.embedding_base_url:
-                raise ValueError("LOCAL_MODE requires EMBEDDING_BASE_URL (local embedding server)")
-            if self.embedding_dimensions <= 0:
-                raise ValueError("EMBEDDING_DIMENSIONS must be positive")
-            if self.answer_max_tokens <= 0 or self.summary_max_tokens <= 0:
-                raise ValueError("generation token caps must be positive")
-        else:
-            if self.openai_model != "gpt-5.6-sol":
-                raise ValueError("the locked benchmark model is 'gpt-5.6-sol'")
-            if self.embedding_model != "text-embedding-3-large":
-                raise ValueError("the locked benchmark embedding model is 'text-embedding-3-large'")
-            if self.reasoning_effort != "medium":
-                raise ValueError(
-                    "the locked grounded-answer configuration requires reasoning effort 'medium'"
-                )
-            if self.summary_reasoning_effort != "low":
-                raise ValueError("the locked summary role requires reasoning effort 'low'")
-            if self.embedding_dimensions != 3072:
-                raise ValueError(
-                    "the locked text-embedding-3-large configuration requires 3072 dimensions"
-                )
-            if self.openai_service_tier != "default":
-                raise ValueError(
-                    "the locked benchmark configuration requires service tier 'default'"
-                )
+        # Fully-local serving contract: a local OpenAI-compatible LLM and a
+        # local embedding server, with positive embedding dimensions and caps.
+        if not self.llm_base_url:
+            raise ValueError("LLM_BASE_URL (local OpenAI-compatible LLM) is required")
+        if not self.embedding_base_url:
+            raise ValueError("EMBEDDING_BASE_URL (local embedding server) is required")
+        if not self.openai_model:
+            raise ValueError("OPENAI_MODEL (local answer/trigger/judge model alias) is required")
+        if not self.embedding_model:
+            raise ValueError("OPENAI_EMBEDDING_MODEL (local embedding alias) is required")
+        if self.embedding_dimensions <= 0:
+            raise ValueError("EMBEDDING_DIMENSIONS must be positive")
+        if self.answer_max_tokens <= 0 or self.summary_max_tokens <= 0:
+            raise ValueError("generation token caps must be positive")
         if self.chunk_tokens <= 0:
             raise ValueError("chunk size must be positive")
         if not 0 <= self.chunk_overlap < self.chunk_tokens:

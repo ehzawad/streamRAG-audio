@@ -9,7 +9,6 @@ from shared.config import ROOT, Settings, env_bool
 
 @dataclass(frozen=True)
 class StreamSettings(Settings):
-    trigger_reasoning_effort: str = os.getenv("TRIGGER_REASONING_EFFORT", "low")
     trigger_min_tokens: int = int(os.getenv("TRIGGER_MIN_TOKENS", "5"))
     trigger_min_new_tokens: int = int(os.getenv("TRIGGER_MIN_NEW_TOKENS", "3"))
     trigger_interval_ms: int = int(os.getenv("TRIGGER_INTERVAL_MS", "500"))
@@ -20,8 +19,6 @@ class StreamSettings(Settings):
 
     def validate(self) -> None:
         super().validate()
-        if self.trigger_reasoning_effort != "low":
-            raise ValueError("the locked streaming trigger requires reasoning effort 'low'")
         if self.settled_draft_delay_ms != 500:
             raise ValueError("the locked StreamRAG configuration requires 500 ms draft settling")
         if self.trigger_timeout_s <= 0:
@@ -29,7 +26,6 @@ class StreamSettings(Settings):
 
     def public_metadata(self) -> dict[str, object]:
         return {
-            "trigger_reasoning_effort": self.trigger_reasoning_effort,
             "trigger_min_tokens": self.trigger_min_tokens,
             "trigger_min_new_tokens": self.trigger_min_new_tokens,
             "trigger_interval_ms": self.trigger_interval_ms,

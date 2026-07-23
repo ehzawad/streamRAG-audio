@@ -9,12 +9,17 @@ BENCH_QUERY_LIMIT ?= 10
 BENCH_CASE_TIMEOUT_S ?= 45
 BENCH_POST_TYPING_DWELL_MS ?= 5000
 
-.PHONY: setup setup-python setup-frontend native bench-native dev-naive dev-stream dev-frontend \
+# smoke-9b: two-venv end-to-end smoke over one clip against a RUNNING :8400/:8401.
+# ASR needs faster-whisper (.venv-modular); the RAG client needs the py3.14 rag venv.
+SMOKE_FW_PYBIN ?= /mnt/sdb/arafat/ehz/hervoice/.venv-modular/bin/python
+SMOKE_RAG_PYBIN ?= /mnt/sdb/arafat/ehz/llm/streamRAG/.venv/bin/python
+SMOKE_HANDOFF ?= runs/smoke_9b_transcript.json
+
+.PHONY: setup setup-python setup-frontend dev-naive dev-stream dev-frontend \
 	check check-shared check-naive check-stream check-comparison \
 	check-frontend build sync-naive sync-stream \
 	benchmark-services-check benchmark-services-sync benchmark-services-serve \
-	benchmark score \
-	docker-config docker-build docker-up docker-sync docker-down
+	benchmark score smoke-9b
 
 setup: setup-python setup-frontend
 
@@ -24,16 +29,6 @@ setup-python:
 setup-frontend:
 	cd frontend && npm ci
 
-# Build the native Rust snapshot backend into the local venv (optional; the
-# stream service falls back to pure Python when this wheel is absent).
-native:
-	cd native/snapshot_delta && VIRTUAL_ENV=$(CURDIR)/.venv uvx maturin develop --release
-
-# Prove the native and Python backends produce identical output and print the
-# per-call microbenchmark used in the write-up.
-bench-native: native
-	uv run python native/parity_bench.py
-
 dev-naive:
 	mkdir -p $(APP_STATE_ROOT)/naive
 	ALLOW_UNREVIEWED_DATASET=1 QDRANT_PATH=$(APP_STATE_ROOT)/naive/qdrant \
@@ -41,7 +36,7 @@ dev-naive:
 		METRICS_LOG=$(APP_STATE_ROOT)/naive/requests.jsonl \
 		uv run uvicorn naive.api:app --reload --host 127.0.0.1 --port 8001
 
-dev-stream: native
+dev-stream:
 	mkdir -p $(APP_STATE_ROOT)/stream
 	ALLOW_UNREVIEWED_DATASET=1 QDRANT_PATH=$(APP_STATE_ROOT)/stream/qdrant \
 		RUNTIME_DB=$(APP_STATE_ROOT)/stream/runtime.sqlite3 \
@@ -107,16 +102,10 @@ score:
 		--evaluation-manifest $(BENCH_EVALUATION_DIR)/checksums.sha256 \
 		--predictions $(BENCH_PREDICTIONS) --output $(BENCH_SUMMARY)
 
-docker-config:
-	docker compose config --quiet
-
-docker-build: docker-config
-	docker compose build
-
-docker-up:
-	docker compose up --build
-
-docker-sync: sync-naive sync-stream
-
-docker-down:
-	docker compose down
+# One-clip end-to-end smoke of the clean local 9B pipeline. Requires the two
+# llama.cpp servers already up (bash harness/serve_local.sh: :8400 qwen3.5-9b-local,
+# :8401 bge-large-en-v1.5). Chains the ASR venv and the RAG venv; exits nonzero on
+# any failed stage. The `rag` step starts its own isolated stream service.
+smoke-9b:
+	CUDA_VISIBLE_DEVICES="" PYTHONPATH=. $(SMOKE_FW_PYBIN) harness/smoke_9b.py asr $(SMOKE_HANDOFF)
+	PYTHONPATH=. $(SMOKE_RAG_PYBIN) harness/smoke_9b.py rag $(SMOKE_HANDOFF)

@@ -13,9 +13,11 @@ What this is NOT (honest scope — see docs/AUDIO.md):
   - NOT a reproduction of the paper's end-to-end speech-in/speech-out model, its
     audio-conditioned trigger, its joint response post-training, or its web+KG tools.
   - This reproduces the paper's modality-agnostic *control policy* over a cascade
-    (VAD + faster-whisper + local Qwen3.5-9B + Chatterbox TTS). The reused
-    coordinator revalidates evidence at commit, so it is SAFER-BUT-DIFFERENT from
-    the paper (which trusts the latest tool result); it is not a bit-exact copy.
+    (Qwen3-TTS offline query synthesis + faster-whisper ASR + local Qwen3.5-9B).
+    The reused coordinator revalidates evidence at commit, so it is
+    SAFER-BUT-DIFFERENT from the paper (which trusts the latest tool result); it is
+    not a bit-exact copy. (An earlier single-voice Chatterbox synthesis was the
+    prior baseline; it is retained only as frozen evidence, not a live component.)
 
 Third-party components (fetched or run locally; NOT redistributed here):
   - Qwen3.5-9B                    Apache-2.0        (Alibaba / Qwen)
@@ -23,8 +25,8 @@ Third-party components (fetched or run locally; NOT redistributed here):
   - llama.cpp                     MIT               (ggml-org)
   - Silero VAD                    MIT               (snakers4)         [turn/barge-in demo]
   - faster-whisper / Whisper      MIT               (SYSTRAN / OpenAI) [streaming ASR]
-  - Chatterbox-TTS                MIT               (Resemble AI)      [query synthesis, prior baseline]
-  - Qwen3-TTS (CustomVoice)       Apache-2.0        (Alibaba / Qwen)   [9-voice query synthesis, headline]
+  - Qwen3-TTS (CustomVoice)       Apache-2.0        (Alibaba / Qwen)   [9-voice query synthesis, current]
+  - Chatterbox-TTS                MIT               (Resemble AI)      [prior single-voice baseline; retired, frozen result only]
   - PydanticAI, FastAPI, Qdrant, etc. — see pyproject.toml / requirements-audio.txt
 
 Evaluation data — CRAG (CC BY-NC 4.0, NON-COMMERCIAL):
@@ -36,10 +38,10 @@ Evaluation data — CRAG (CC BY-NC 4.0, NON-COMMERCIAL):
     official CRAG Task-1/2 development release. It is provided for NON-COMMERCIAL
     RESEARCH use only, consistent with CRAG's CC BY-NC 4.0 license and with
     attribution to Meta.
-  - Any spoken audio synthesized from these questions (data/audio_crag/, the
-    "CRAG-TTS-local" set) is a derivative of CRAG and is therefore likewise
-    NON-COMMERCIAL; it is gitignored, not redistributed, and must be regenerated
-    locally. This is a CRAG-style local auto-eval, NOT an official CRAG/KDD
+  - Any spoken audio synthesized from these questions (the current Qwen3-TTS
+    9-voice set under data/audio_crag_qwen/) is a derivative of CRAG and is
+    therefore likewise NON-COMMERCIAL; it is gitignored, not redistributed, and
+    must be regenerated locally. This is a CRAG-style local auto-eval, NOT an official CRAG/KDD
     leaderboard score, and its absolute numbers are NOT comparable to the paper's
     (local Qdrant retrieval is not the paper's 100K-document web+KG pipeline).
 

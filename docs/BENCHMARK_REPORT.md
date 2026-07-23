@@ -60,23 +60,6 @@ under the 45 s deadline, with container `RestartCount=0`). The scorer counted it
 honestly as a failure; the clean re-run above then completed 20/20, confirming the
 blip was transient transport rather than a pipeline defect.
 
-## Native SnapshotAnalyzer microbenchmark (Rust vs Python)
-
-`SnapshotAnalyzer.analyze` runs on every typed draft and feeds the StreamRAG
-trigger. It is implemented in Rust (`native/snapshot_delta/`, PyO3) behind an
-import seam with a byte-identical pure-Python fallback. `make bench-native`
-verifies parity and times both backends over 90 draft pairs, including
-append-only, correction, empty-input, and Unicode/whitespace edge cases (matching
-CPython's `str.split()`, including U+001C–U+001F):
-
-- parity: **90/90 identical `SnapshotDelta`** (fingerprint, common-prefix chars,
-  word count, new words, append flag);
-- speed: **~1.44 µs/call (Python) vs ~0.35 µs/call (Rust) ≈ 4.1× faster**.
-
-This is a per-call microbenchmark only. It is not attributed to the end-to-end
-latency above: network, embedding, retrieval, and model-generation time dominate a
-request, so the native speedup does not by itself explain the TTFT difference.
-
 ## Real browser acceptance
 
 The final Docker topology was also exercised through Google Chrome. Playwright

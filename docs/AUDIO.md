@@ -11,12 +11,16 @@ variant; this repo's base), and the Silero-VAD turn/barge-in logic from
 
 ## What this is — and is NOT
 
-**Is:** a cascade — spoken query → (VAD endpoint) → streaming ASR partials →
-LocalAgreement stabilizer → the reused `StreamCoordinator` trigger fires
-*speculative* retrieval over a local CRAG corpus → commit at endpoint → grounded
-answer from local **Qwen3.5-9B (llama.cpp)** → TTS. The paper explicitly notes its
-Model-Triggered method is **modality-agnostic and applies to typed input**; this
-implements that control policy over an ASR front-end.
+**Is:** a cascade — spoken CRAG query is synthesized offline (Qwen3-TTS) →
+transcribed by faster-whisper `base.en` → the transcript feeds the reused typed
+streaming-RAG core (`StreamCoordinator` trigger fires *speculative* retrieval over a
+local CRAG corpus → commit → grounded answer from local **Qwen3.5-9B (llama.cpp)**).
+The paper explicitly notes its Model-Triggered method is **modality-agnostic and
+applies to typed input**; this implements that control policy behind an ASR
+front-end. (An earlier Chatterbox-era live demo added a VAD endpoint + streaming
+ASR-partials + a LocalAgreement stabilizer; that demo front-end has been retired —
+see *Retired / rejected experiments* below — leaving one clean offline-synth → ASR →
+RAG evaluation pipeline.)
 
 **Is NOT** (do not read these into any number here):
 
@@ -36,27 +40,27 @@ implements that control policy over an ASR front-end.
 
 | Stage | Component | Reuse |
 |---|---|---|
-| Endpoint / barge-in | Silero VAD (`hervoice/live`) | copied for the **unscored** live demo only |
-| Streaming ASR | faster-whisper `base.en` int8 (CPU), re-decode 500 ms prefixes | `audio/asr_partials.py` (new) |
-| Stabilizer | LocalAgreement-2, char-level `append_only` matching `SnapshotAnalyzer` | `audio/stabilizer.py` (new) |
+| Query synthesis | Qwen3-TTS CustomVoice, 9 voices (offline, GPU sole-tenant) | `audio/synth_qwen.py` (new) |
+| ASR | faster-whisper `base.en` int8 (CPU) | `scoring/asr_multivoice.py` (new) |
 | Trigger / speculation | `stream/trigger.py::ModelTrigger` + `stream/coordinator.py` | **imported unchanged** |
 | Retrieval | bge-large-en-v1.5 (GGUF, :8401) + Qdrant | imported |
-| Answer | Qwen3.5-9B Q4_K_M (llama.cpp, :8400), grounded agent | imported |
-| Query synthesis / TTS-out | Chatterbox-TTS (offline, GPU sole-tenant) | `audio/synth.py` (new) |
+| Answer / judge | Qwen3.5-9B Q4_K_M (llama.cpp, :8400), grounded agent | imported |
 
-**Local-mode fix made here:** `stream/trigger.py` called `responses_model()` (OpenAI
-*Responses* API), which llama.cpp does not implement — so the stream service could not
-start locally. Patched to use `chat_model()` (Chat Completions + `enable_thinking=false`)
-in `local_mode`, mirroring the answer agent. (The same bug exists upstream in
-streamrag-local; left untouched there.)
+**Local Chat-Completions fix made here:** `stream/trigger.py` originally targeted the
+OpenAI *Responses* API, which llama.cpp does not implement — so the stream service could
+not start locally. Patched to use `chat_model()` (Chat Completions +
+`enable_thinking=false`), mirroring the answer agent, so the trigger runs entirely on the
+local :8400 server. (The same issue exists upstream in streamrag-local; left untouched
+there.) The one-clip `make smoke-9b` target exercises exactly this path end-to-end.
 
 ## Spoken sets: `CRAG-TTS-local` (prior baseline) → Qwen3-TTS 9-voice (headline)
 
-**`CRAG-TTS-local` (prior baseline, `audio/synth.py`)** — paper-shaped construction (§9):
-synthesize each CRAG Task-1 question with a frozen voice/seed (**Chatterbox**, one voice),
-re-ASR with an independent recognizer (faster-whisper), keep items at WER ≤ 0.10. Kept 12/15
-(9 test + 3 dev); the 3 excluded are recorded with their WER, not silently dropped. Retained
-as a documented single-voice baseline (`runs/three_arm.json`).
+**`CRAG-TTS-local` (prior baseline, Chatterbox — historical)** — paper-shaped
+construction (§9): each CRAG Task-1 question was synthesized with a frozen voice/seed
+(**Chatterbox**, one voice), re-ASR'd with an independent recognizer (faster-whisper), and
+kept at WER ≤ 0.10 (12/15; the 3 excluded recorded with their WER, not silently dropped).
+The Chatterbox synth script has been removed; this baseline survives only as its **frozen
+result** `runs/three_arm.json` (not re-run).
 
 **Qwen3-TTS 9-voice set (current headline, `audio/synth_qwen.py`)** — the same 12 kept
 questions rendered in **all 9 Qwen3-TTS CustomVoice timbres** (`aiden, dylan, eric, ono_anna,
@@ -80,25 +84,18 @@ per the *reused automatic judge*):
 CIs are **question-clustered** bootstraps (resampling the 12 questions as intact units), never
 n=108 iid; `multivoice.json` retains per-question rows so the clustering is auditable.
 
-## Two measurements
+## Frozen 3-arm baseline (accuracy & latency)
 
-### 1. The ASR-churn gate (`scoring/audio_quality.py`)
-
-Raw cumulative ASR revises constantly: **mean raw correction rate 0.774** — most deltas
-are non-`append_only` and would fire `_cancel_for_correction`, collapsing streaming to
-endpoint-only. LocalAgreement-2 cuts this to **0.084** (endpoint WER 0.013). This proves
-the stabilizer is *necessary* and makes partials mostly append-only. It does **NOT** prove
-speculative evidence survives the coordinator's commit gate — that is measured separately.
-
-### 2. Three-arm eval (`harness/run_three_arm.py`)
-
-Identical audio → identical endpoint ASR transcript for all arms; they differ only in
-*when/whether* retrieval fires. Scored with the reused CRAG Task-1 judge (truthfulness
-`(C−I)/N`, bootstrap CI). Hardened after an adversarial audit: clean service isolation
-(unique per-run state, verified child, refuse a busy port), commit at the **true audio
-endpoint**, **counterbalanced** arm order across reps (llama.cpp prompt-cache warming
-otherwise favors whichever arm runs second), per-query **speculation telemetry read-back**,
-and **paired** latency statistics (never difference-of-independent-medians).
+The prior single-voice Chatterbox run's three-arm eval is retained as **frozen evidence**
+(`runs/three_arm.json`); its driver has been retired, but its isolation / arm / scorer
+primitives live on in `harness/eval_common.py` (reused by the 9-voice headline). Identical
+audio → identical endpoint ASR transcript for all arms; they differ only in *when/whether*
+retrieval fires. Scored with the reused CRAG Task-1 judge (truthfulness `(C−I)/N`, bootstrap
+CI). It was hardened after an adversarial audit: clean service isolation (unique per-run
+state, verified child, refuse a busy port), commit at the **true audio endpoint**,
+**counterbalanced** arm order across reps (llama.cpp prompt-cache warming otherwise favors
+whichever arm runs second), per-query **speculation telemetry read-back**, and **paired**
+latency statistics (never difference-of-independent-medians).
 
 **Accuracy — the real, robust win** (`runs/three_arm.json`, 2 counterbalanced reps):
 
@@ -151,20 +148,32 @@ voice. The prefill no-KV-reuse null, by contrast, is a Qwen3.5/llama.cpp propert
 - Latency: report the **paired** distribution and the **speculation-landed rate**; claim a
   streaming benefit only if speculation actually landed before commit (it did not).
 
+## Retired / rejected experiments
+
+One clean local pipeline is kept; the following were tried and cut, recorded here so the
+history stays honest. None is part of the live pipeline or the retained result bundle
+(`runs/{multivoice,three_arm,prefill_warm}.json`).
+
+| Experiment | What was measured | Verdict |
+|---|---|---|
+| **Qwen3.6-27B** answer/judge upgrade | RAG truthfulness 0.907; retrieval gap **+0.269**, question-clustered 95 % CI **[0.00, 0.57]**, positive on **7/9** voices | **Reverted to 9B** — the larger model *weakened* the retrieval headline (9B: gap +0.51, 9/9, CI excludes 0) and the CI now touched 0. |
+| **Nemotron-3.5** ASR (vs faster-whisper `base.en`) | WER **0.076** vs base.en **0.057**; `large-v3-turbo` tied base.en | **Rejected** — failed the WER gate; kept `base.en`. No ASR change. |
+| **Pre-Send answering** (speculative answer before commit) | ready-before-commit rate below the **≥ 80 %** gate on audio | **Removed** (gated experiment) — it never cleared the readiness gate on spoken input. |
+| Chatterbox streaming front-end (VAD + ASR-partials + LocalAgreement-2 stabilizer) + ASR-churn gate | stabilizer cut the raw ASR correction rate 0.774 → 0.084 (endpoint WER 0.013) | **Retired** with the Chatterbox live demo; the offline-synth → ASR → RAG evaluation pipeline does not need it. Its result JSON is not retained. |
+
 ## Reproduce
 
 ```bash
 # 0. servers on the A5000 (:8400 Qwen3.5-9B, :8401 bge-large)
 bash harness/serve_local.sh
-# 1. synth CRAG-TTS-local (GPU sole-tenant, .venv-modular)
-CUDA_VISIBLE_DEVICES=0 .venv-modular/bin/python audio/synth.py
-# 2. ASR-churn gate + traces (CPU)
-CUDA_VISIBLE_DEVICES="" .venv-modular/bin/python scoring/audio_quality.py
-CUDA_VISIBLE_DEVICES="" .venv-modular/bin/python audio/build_traces.py
-# 3. 3-arm eval (py3.14 RAG venv) — prior single-voice baseline
-PYTHONPATH=. .venv/bin/python harness/run_three_arm.py
-# 4. Qwen3-TTS 9-voice headline (.venv-qwen-audio synth, then ASR, then eval)
-CUDA_VISIBLE_DEVICES=0 .venv-qwen-audio/bin/python audio/synth_qwen.py
-CUDA_VISIBLE_DEVICES="" .venv-modular/bin/python scoring/asr_multivoice.py
-PYTHONPATH=. .venv/bin/python harness/run_multivoice.py
+# 1. Qwen3-TTS 9-voice synth (GPU sole-tenant; qwen-audio venv)
+CUDA_VISIBLE_DEVICES=0 <qwen-audio-venv>/bin/python audio/synth_qwen.py
+# 2. faster-whisper base.en ASR + WER (CPU; faster-whisper venv)
+CUDA_VISIBLE_DEVICES="" <fw-venv>/bin/python scoring/asr_multivoice.py
+# 3. 9-voice headline eval (py3.14 RAG venv)
+PYTHONPATH=. <rag-venv>/bin/python harness/run_multivoice.py
+# 4. KV-reuse probe (honest negative)
+python scoring/prefill_warm.py
+# 5. one-clip end-to-end smoke (chains the ASR venv + the RAG venv)
+make smoke-9b
 ```

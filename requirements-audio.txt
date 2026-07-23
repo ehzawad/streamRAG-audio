@@ -6,11 +6,14 @@
 #   python3.12 -m venv .venv-audio && . .venv-audio/bin/activate
 #   pip install -r requirements-audio.txt
 #
-# TTS synthesis (Chatterbox) is GPU-sole-tenant and offline; streaming ASR
+# TTS synthesis (Qwen3-TTS) is GPU-sole-tenant and offline; streaming ASR
 # (faster-whisper) is CPU int8. Both write to data/audio_crag/ (wav gitignored).
+#
+# Query-audio synthesis uses Qwen3-TTS (the external `qwen-tts` package, run in
+# its own .venv-qwen-audio); it is not pinned here because it is not co-resident
+# with this ASR/eval stack.
 
 torch==2.6.0
-chatterbox-tts==0.1.7      # English TTS: synthesize spoken CRAG queries (offline, seeded)
 faster-whisper==1.2.1      # streaming ASR: 500 ms rolling partial hypotheses (CPU int8)
 jiwer>=3.0                 # WER / entity-WER of synthetic audio vs gold text
 soundfile>=0.12            # deterministic wav I/O

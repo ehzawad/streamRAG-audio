@@ -55,8 +55,8 @@ search_local_crag never accesses the public internet.
 def thinking_extra_body(settings: Settings) -> dict:
     """llama.cpp chat-template control. Qwen3.5 is a reasoning model; disabling
     thinking keeps the visible answer inside the token budget and yields clean
-    tool-call transcripts. No-op against hosted OpenAI (ignored extra field)."""
-    if settings.local_mode and settings.disable_thinking:
+    tool-call transcripts."""
+    if settings.disable_thinking:
         return {"chat_template_kwargs": {"enable_thinking": False}}
     return {}
 

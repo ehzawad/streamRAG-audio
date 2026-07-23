@@ -16,9 +16,6 @@ INDEX_PIPELINE_VERSION = "typed-crag-dedup-chunk-payload-v2"
 CONFIG_FINGERPRINT_FIELDS = (
     "openai_model",
     "embedding_model",
-    "reasoning_effort",
-    "summary_reasoning_effort",
-    "openai_service_tier",
     "qdrant_collection",
     "embedding_dimensions",
     "chunk_tokens",

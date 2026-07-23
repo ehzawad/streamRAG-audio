@@ -1,23 +1,24 @@
-# Fully-local mode (single RTX A5000, no hosted API)
+# Fully-local serving (single RTX A5000, no hosted API)
 
-`LOCAL_MODE=1` (the default in `.env.example`) runs the entire StreamRAG stack
-on one machine with no OpenAI dependency: the answer generator and the embedder
-are local OpenAI-compatible servers, and everything else (Qdrant, SQLite, the
-Rust hot path) is unchanged. Setting `LOCAL_MODE=0` restores the hosted
-`gpt-5.6-sol` / `text-embedding-3-large` baseline.
+This repo runs the entire StreamRAG stack on one machine with no OpenAI
+dependency: the answer generator and the embedder are local OpenAI-compatible
+servers (llama.cpp), and everything else (Qdrant, SQLite) is unchanged. There is
+**one** pipeline here — local — with no hosted toggle. The OpenAI-compatible
+protocol is still used (the `openai` SDK / `OpenAIChatModel` / `OpenAIEmbedder`),
+because llama.cpp speaks that protocol; the base URLs point at the on-box servers.
 
-This is an **opt-in local backend**, not a claim of parity with the hosted model.
+This is a **local backend**, not a claim of parity with any hosted model.
 
-## What changed
+## Serving choices
 
-| Piece | Hosted baseline | Local mode |
-|---|---|---|
-| Generator | `gpt-5.6-sol` (OpenAI Responses API) | **Qwen3.5-9B** via llama.cpp, OpenAI **Chat Completions** (`OpenAIChatModel`) |
-| Embeddings | `text-embedding-3-large` (3072-d) | **bge-large-en-v1.5** (1024-d) via llama.cpp `--embedding` |
-| Thinking | n/a | Qwen3.5 is a reasoning model; disabled (`chat_template_kwargs.enable_thinking=false`) to keep answers in budget and tool transcripts clean |
-| Token cap | 600 / 320 | configurable `ANSWER_MAX_TOKENS` (2048) / `SUMMARY_MAX_TOKENS` (512) |
-| Chunking | 400 / 50 | 256 / 32 (bge caps at 512 tokens; 400-token chunks overflow its tokenizer) |
-| Multi-turn | committed-text retrieval | **contextual retrieval**: follow-up pronouns/ellipsis resolved from compact conversational state before retrieval (query text only; evidence stays turn-local), applied symmetrically to both paths |
+| Piece | This repo (fully local) |
+|---|---|
+| Generator | **Qwen3.5-9B** Q4_K_M via llama.cpp, OpenAI **Chat Completions** (`OpenAIChatModel`) — answer, trigger, and judge |
+| Embeddings | **bge-large-en-v1.5** (1024-d) via llama.cpp `--embedding` |
+| Thinking | Qwen3.5 is a reasoning model; disabled (`chat_template_kwargs.enable_thinking=false`) to keep answers in budget and tool transcripts clean |
+| Token cap | configurable `ANSWER_MAX_TOKENS` (2048) / `SUMMARY_MAX_TOKENS` (512) — sized to cover the reasoning trace plus the visible answer |
+| Chunking | 256 / 32 (bge caps at 512 tokens; 400-token chunks overflow its tokenizer) |
+| Multi-turn | **contextual retrieval**: follow-up pronouns/ellipsis resolved from compact conversational state before retrieval (query text only; evidence stays turn-local), applied symmetrically to both paths |
 
 ## Serving
 
@@ -36,7 +37,6 @@ llama-server -m bge-large-en-v1.5-f16.gguf --port 8401 -ngl 99 \
 Then point the services at them (`.env`):
 
 ```
-LOCAL_MODE=1
 LLM_BASE_URL=http://127.0.0.1:8400/v1
 EMBEDDING_BASE_URL=http://127.0.0.1:8401/v1
 EMBEDDING_DIMENSIONS=1024
@@ -44,9 +44,9 @@ CHUNK_TOKENS=256
 CHUNK_OVERLAP=32
 ```
 
-Start a service and build its index exactly as before (`POST /v1/data/sync`).
-The Qdrant collection is dimension- and chunker-specific, so a fresh sync is
-required when switching between hosted and local mode.
+Start a service and build its index with `POST /v1/data/sync`. The Qdrant
+collection is dimension- and chunker-specific, so a fresh sync is required if the
+embedding model or chunking ever changes.
 
 Serving precision is currently `Q4_K_M`. Qwen3.5's recurrent (GatedDeltaNet)
 layers are quantization-sensitive; a precision ladder (bf16 → Q8_0 → Q6_K → Q4)
@@ -71,7 +71,7 @@ secondary all-1,335 number is disclosed as containing the 10 seen items.
 
 This is a **CRAG-style local auto-eval**, not an official CRAG/KDD leaderboard
 score (the judge is a pinned local model, not the paper's hosted GPT judge). It
-does **not** claim: hosted-model quality parity; that fine-tuning is
+does **not** claim: large-model quality parity; that fine-tuning is
 ineffective/unnecessary in general; unseen generalization beyond this split;
 "full Task 2" (the mock KG/API path is not implemented); or production readiness.
 

@@ -3,14 +3,6 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass
 
-try:  # Prefer the native backend; fall back to pure Python if the wheel is absent.
-    from streamrag_snapshot import analyze_delta as _native_analyze_delta
-
-    _BACKEND = "rust"
-except ImportError:  # pragma: no cover - exercised whenever the wheel is not installed
-    _native_analyze_delta = None
-    _BACKEND = "python"
-
 
 @dataclass(frozen=True)
 class SnapshotDelta:
@@ -24,26 +16,13 @@ class SnapshotDelta:
 class SnapshotAnalyzer:
     """Compute deterministic append-versus-correction deltas between typed drafts.
 
-    The hot ``analyze`` call runs on every draft update. When the native
-    ``streamrag_snapshot`` wheel is installed it delegates to Rust; otherwise it
-    uses the pure-Python implementation below. Both produce identical
-    ``SnapshotDelta`` values, so ``coordinator``/``path`` need no changes.
+    The hot ``analyze`` call runs on every draft update using the pure-Python
+    implementation below.
     """
 
-    backend = _BACKEND
+    backend = "python"
 
     def analyze(self, previous: str, current: str) -> SnapshotDelta:
-        if _native_analyze_delta is not None:
-            fingerprint, common, word_count, new_words, append_only = _native_analyze_delta(
-                previous, current
-            )
-            return SnapshotDelta(
-                fingerprint=fingerprint,
-                common_prefix_chars=common,
-                word_count=word_count,
-                new_words=new_words,
-                append_only=append_only,
-            )
         return self._analyze_python(previous, current)
 
     @staticmethod

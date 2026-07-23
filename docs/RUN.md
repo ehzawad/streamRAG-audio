@@ -1,15 +1,14 @@
 # Run and reproduce
 
+Everything here runs **fully on one box** — no hosted API. The answer/trigger/judge
+model and the embedder are local llama.cpp servers (see [`LOCAL.md`](LOCAL.md)).
+
 ## Prerequisites
 
-For the Docker application:
-
-- Docker Desktop or Docker Engine with Compose;
+- `uv`, Python 3.14, and (for the GUI) Node.js/npm;
 - `make` and `curl`;
-- a real OpenAI API key.
-
-For local tests and standalone services, also install `uv`, Python 3.14, and
-Node.js/npm.
+- the two llama.cpp servers up on the A5000 (`:8400` `qwen3.5-9b-local`, `:8401`
+  `bge-large-en-v1.5`) — `bash harness/serve_local.sh`.
 
 ## Configure
 
@@ -17,44 +16,39 @@ Node.js/npm.
 cp .env.example .env
 ```
 
-Set these values in `.env`:
+The defaults already point at the local servers. The one value to set for a run is:
 
 ```dotenv
-OPENAI_API_KEY=your-real-key
 ALLOW_UNREVIEWED_DATASET=1
 ```
 
 `ALLOW_UNREVIEWED_DATASET=1` lets the services load the committed candidate
 corpus. There is no sealed test run; this is the normal setting for every run.
 
-## Reproduce the Docker development pipeline
+## Run the two services
 
-Terminal A:
-
-```bash
-make docker-up
-```
-
-Terminal B:
+Each service embeds its own Qdrant + SQLite under `./var/<role>/`.
 
 ```bash
-make docker-sync
-make benchmark
-make score
+# terminal A — Naive RAG on :8001
+make dev-naive
+# terminal B — StreamRAG on :8002
+make dev-stream
 ```
 
-`docker-sync` reads the committed 250-document corpus, creates 1,000 embeddings
-for each path, and writes them to separate Qdrant services. On the recorded clean
-run, Naive indexed in 40.926 seconds and StreamRAG in 39.055 seconds. Existing
-valid volumes make later syncs incremental.
+Build each index once it is up (reads the committed 250-document corpus, writes
+its chunks to that service's Qdrant):
 
-`make benchmark` replays `test_queries.jsonl` through both services with
-deterministic 70 WPM typing, changed-only 400 ms snapshots, and a 5-second
-pre-Send dwell, writing predictions to
-`comparison/benchmark/results/predictions.jsonl`. `make score` binds the gold set
-via `checksums.sha256` and writes `summary.json`.
+```bash
+make sync-naive
+make sync-stream
+```
 
-Open <http://127.0.0.1:5173/> after both indexes are ready:
+Then, for the browser comparison UI:
+
+```bash
+make dev-frontend      # http://127.0.0.1:5173/
+```
 
 | URL | Experience |
 |---|---|
@@ -62,53 +56,13 @@ Open <http://127.0.0.1:5173/> after both indexes are ready:
 | <http://127.0.0.1:5173/stream> | StreamRAG only |
 | <http://127.0.0.1:5173/compare> | simultaneous comparison |
 
-Ports 8001 and 8002 expose JSON APIs and generated OpenAPI documentation. End
-users need only the frontend URL.
+Ports 8001 and 8002 expose JSON APIs and generated OpenAPI docs. End users need
+only the frontend URL.
 
-## Verify the repository
+## The typed benchmark (headless)
 
-```bash
-make setup
-make check
-make docker-config
-```
-
-`make check` runs Python linting (ruff) and a production frontend build. The
-committed corpus is checksum-bound; each service verifies those checksums when it
-loads the dataset, so no separate verification step is required. The Rust native
-backend `native/snapshot_delta/` (PyO3 module `streamrag_snapshot`, with a
-pure-Python fallback in `stream/snapshot.py`) builds via `make native` and is
-benchmarked with `make bench-native`.
-
-Useful live checks:
-
-```bash
-docker compose ps
-curl --fail http://127.0.0.1:8001/v1/health
-curl --fail http://127.0.0.1:8002/v1/health
-```
-
-Both API health payloads should report `"ok": true`, `"index_ready": true`, and
-`"indexed_chunks": 1000`.
-
-## Run components separately
-
-The two products do not require the frontend or comparison runner:
-
-```bash
-make dev-naive   # port 8001, embedded local Qdrant
-make dev-stream  # port 8002, embedded local Qdrant
-```
-
-Start the route frontend separately with `make dev-frontend`. Exact component
-commands and focused tests are in:
-
-- [`naive/README.md`](../naive/README.md)
-- [`stream/README.md`](../stream/README.md)
-- [`frontend/README.md`](../frontend/README.md)
-- [`comparison/README.md`](../comparison/README.md)
-
-The headless provisioner can also create two isolated embedded service stores:
+The headless provisioner creates two isolated embedded service stores, replays the
+queries through both, and scores offline against sealed gold:
 
 ```bash
 make benchmark-services-check
@@ -122,39 +76,64 @@ make benchmark
 make score
 ```
 
-This is the single benchmark path, bound to `data/crag_eval`.
+`make benchmark` replays `test_queries.jsonl` through both services with
+deterministic 70 WPM typing, changed-only 400 ms snapshots, and a 5-second
+pre-Send dwell, writing predictions to
+`comparison/benchmark/results/predictions.jsonl`. `make score` binds the gold set
+via `checksums.sha256` and writes `summary.json`. This is the single benchmark
+path, bound to `data/crag_eval`.
+
+## The audio pipeline
+
+The spoken-query evaluation (Qwen3-TTS synth → faster-whisper ASR → the streaming
+RAG core) is documented in [`AUDIO.md`](AUDIO.md); its reproduce block and the
+one-clip `make smoke-9b` end-to-end check live there.
+
+## Verify the repository
+
+```bash
+make setup
+make check
+make smoke-9b   # needs the :8400/:8401 servers up (see AUDIO.md)
+```
+
+`make check` runs Python linting (ruff) and a production frontend build. The
+committed corpus is checksum-bound; each service verifies those checksums when it
+loads the dataset, so no separate verification step is required.
+
+Useful live checks:
+
+```bash
+curl --fail http://127.0.0.1:8001/v1/health
+curl --fail http://127.0.0.1:8002/v1/health
+```
+
+Both API health payloads should report `"ok": true`, `"index_ready": true`,
+`"model": "qwen3.5-9b-local"`, and `"embedding_model": "bge-large-en-v1.5"`.
 
 ## Persistent state
 
-Compose uses a stable lowercase project name, `streamrag`, and four named volumes:
+Each standalone service keeps generated state under `./var/<role>/`:
 
-- `streamrag_naive-qdrant`
-- `streamrag_naive-runtime`
-- `streamrag_stream-qdrant`
-- `streamrag_stream-runtime`
+- `var/naive/qdrant`, `var/naive/runtime.sqlite3`, `var/naive/requests.jsonl`
+- `var/stream/qdrant`, `var/stream/runtime.sqlite3`, `var/stream/requests.jsonl`
 
-`make docker-down` removes containers and networks but preserves these volumes.
-To deliberately rebuild generated state from the committed corpus:
-
-```bash
-docker compose down --volumes
-make docker-up
-# Then rerun make docker-sync from another terminal.
-```
-
-Deleting these volumes removes generated indexes, SQLite conversations, and logs;
-it does not remove the committed dataset.
+These hold generated indexes, SQLite conversations, and logs; they are gitignored.
+Deleting them removes generated state but not the committed dataset — re-run the
+`sync-*` targets to rebuild.
 
 ## Troubleshooting
 
 - **API health says the dataset is unapproved:** set
-  `ALLOW_UNREVIEWED_DATASET=1` in `.env`, then recreate the containers.
-- **Index is not ready:** run `make docker-sync` and inspect the API and Qdrant
-  logs with `docker compose logs`.
-- **Port already in use:** stop the conflicting process or the older Compose
-  project before starting this stack.
+  `ALLOW_UNREVIEWED_DATASET=1` in `.env`, then restart the service.
+- **Index is not ready:** run the matching `make sync-*` target and inspect the
+  service log under `var/<role>/`.
+- **Health reports the wrong model/embedding alias:** the llama.cpp servers were
+  started with different `--alias` values; match them to `.env` (`OPENAI_MODEL`,
+  `OPENAI_EMBEDDING_MODEL`).
+- **Port already in use:** stop the conflicting process before starting.
 - **A changed `.env` has no effect:** configuration is validated at startup;
-  recreate the affected containers.
+  restart the affected service.
 
 The supplied ports are loopback-only and the stack has no authentication. See
 the deployment and security boundary in [`PIPELINE.md`](PIPELINE.md) before any

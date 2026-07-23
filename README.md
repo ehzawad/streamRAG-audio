@@ -4,7 +4,8 @@ A single-**A5000** exploration of **spoken-query RAG**: a cascaded emulation of 
 *Model-Triggered Streaming RAG control policy* from *Stream RAG* (Arora et al.,
 Meta + CMU, [arXiv:2510.02044](https://arxiv.org/abs/2510.02044)), run fully locally
 over CRAG questions with **Qwen3.5-9B (llama.cpp)** + **bge-large** + **Qdrant**, plus a
-faster-whisper front-end and **Qwen3-TTS** (9 voices) / Chatterbox query synthesis.
+faster-whisper ASR front-end and **Qwen3-TTS** (9 voices) offline query synthesis.
+(A single-voice Chatterbox set was the prior baseline; kept only as frozen evidence.)
 
 Built on this author's own [streamrag-local](https://github.com/ehzawad/streamrag-local)
 (local variant of [streamRAG](https://github.com/ehzawad/streamRAG)); the streaming
@@ -44,20 +45,20 @@ comparable to the paper. Full scope, mapping, and ceilings: **[docs/AUDIO.md](do
 
 ```bash
 bash harness/serve_local.sh                                  # :8400 Qwen3.5-9B, :8401 bge
-CUDA_VISIBLE_DEVICES=0  .venv-modular/bin/python audio/synth.py          # CRAG-TTS-local
-CUDA_VISIBLE_DEVICES="" .venv-modular/bin/python scoring/audio_quality.py # ASR-churn gate
-CUDA_VISIBLE_DEVICES="" .venv-modular/bin/python audio/build_traces.py    # stabilized traces
-PYTHONPATH=. .venv/bin/python harness/run_three_arm.py       # 3-arm (prior single-voice baseline)
-CUDA_VISIBLE_DEVICES=0  .venv-qwen-audio/bin/python audio/synth_qwen.py    # Qwen3-TTS 9-voice set
-CUDA_VISIBLE_DEVICES="" .venv-modular/bin/python scoring/asr_multivoice.py
-PYTHONPATH=. .venv/bin/python harness/run_multivoice.py      # 9-voice headline (per-voice + macro)
+CUDA_VISIBLE_DEVICES=0  <qwen-audio-venv>/bin/python audio/synth_qwen.py   # Qwen3-TTS 9-voice set
+CUDA_VISIBLE_DEVICES="" <fw-venv>/bin/python scoring/asr_multivoice.py     # faster-whisper base.en ASR
+PYTHONPATH=. <rag-venv>/bin/python harness/run_multivoice.py # 9-voice headline (per-voice + macro)
 python scoring/prefill_warm.py                               # KV-reuse probe (honest negative)
+make smoke-9b                                                # one-clip end-to-end smoke (two venvs)
 ```
 
+The audio synthesis and ASR each run in their own CPU/GPU-appropriate venv
+(`requirements-audio.txt`); the RAG harness runs in the py3.14 streamRAG venv.
 The underlying local RAG app (naive/stream services, frontend, CRAG Task-1 eval) is
-inherited from streamrag-local; see `docs/LOCAL.md`. Note: the stream service's trigger
-was fixed here to use Chat Completions in `LOCAL_MODE` (it called the OpenAI Responses
-API, which llama.cpp does not implement).
+inherited from streamrag-local; see `docs/LOCAL.md`. The frozen prior baseline
+(`runs/three_arm.json`) is kept as evidence but is not re-run. Note: the stream
+service's trigger was fixed here to use Chat Completions (it called the OpenAI
+Responses API, which llama.cpp does not implement) — see `docs/AUDIO.md`.
 
 ## License & data
 

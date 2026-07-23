@@ -31,7 +31,7 @@ import soundfile as sf  # noqa: E402
 import torch  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-TRACES = ROOT / "data" / "audio_crag" / "asr_traces.json"   # the 12 kept queries + gold
+QUERIES = ROOT / "data" / "audio_crag_qwen" / "queries.jsonl"  # the 12 kept queries + gold
 OUT = ROOT / "data" / "audio_crag_qwen"
 W24, W16 = OUT / "wav24", OUT / "wav16"
 MODEL_ID = "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice"
@@ -56,7 +56,7 @@ def main() -> int:
 
     W24.mkdir(parents=True, exist_ok=True)
     W16.mkdir(parents=True, exist_ok=True)
-    queries = json.loads(TRACES.read_text())
+    queries = [json.loads(x) for x in QUERIES.read_text().splitlines() if x.strip()]
     print(f"[qwen-tts] {len(queries)} queries; loading {MODEL_ID} ...")
     model = Qwen3TTSModel.from_pretrained(MODEL_ID)
     speakers = model.get_supported_speakers()

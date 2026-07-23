@@ -57,7 +57,7 @@ class ConversationSummarySkill:
             max_tokens=settings.summary_max_tokens,
             extra_body=(
                 {"chat_template_kwargs": {"enable_thinking": False}}
-                if settings.local_mode and settings.disable_thinking
+                if settings.disable_thinking
                 else {}
             ),
         )

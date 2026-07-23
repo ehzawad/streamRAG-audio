@@ -9,7 +9,7 @@ run (runs/three_arm.json). Reports BOTH all-108 and WER<=0.10 (sensitivity) with
 QUESTION-CLUSTERED paired-gap bootstrap (12 clusters, not n=108 iid) + per-question rows for
 auditability. Earned ceiling: "advantage observed positive on every tested timbre (per the
 reused automatic judge)" — consistency across tested synthetic voices, NOT unseen-voice/human
-robustness or a retrieval-only causal effect. Reuses run_three_arm isolation + arms + scorer.
+robustness or a retrieval-only causal effect. Reuses harness/eval_common isolation + arms + scorer.
 
   PYTHONPATH=. /mnt/sdb/arafat/ehz/llm/streamRAG/.venv/bin/python harness/run_multivoice.py
 """
@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from comparison.crag_task1_eval import judge  # noqa: E402
-from harness.run_three_arm import (  # noqa: E402
+from harness.eval_common import (  # noqa: E402
     RUNS,
     arm_closed_book,
     arm_naive,
