@@ -20,10 +20,14 @@ both backed by committed result JSON under `runs/`:
 - **Retrieval is the real win (accuracy).** On synthesized spoken CRAG queries,
   truthfulness `(C−I)/N` rises from **+0.42 (closed-book) to +0.92 (RAG)**, with
   observed-incorrect answers driven to **0** — fully local. (`runs/three_arm.json`)
-- **The paper's speculative *retrieval* prefetch does not make it faster here** — it
-  landed on **0/24** turns and, fairly measured, is *slower* (trigger overhead; retrieval
-  is cheap vs the 9B answer TTFT, which dominates). The lever that *does* work is
-  **answer-prefill / KV-cache warming**: **−362 ms (−52 %) TTFT, 12/12** trials.
+- **Neither streaming trick makes it faster here, and I can prove why.** The paper's
+  speculative *retrieval* prefetch landed on **0/24** turns (fairly measured, *slower*).
+  And **answer-prefill / KV-cache warming does not work either**: instrumenting the server
+  (`cache_n`) shows Qwen3.5-9B — a **hybrid/recurrent (GatedDeltaNet)** model — gets
+  **no KV prefix reuse** (`reuse_fraction ≈ 0.02`; identical prompts fully re-prefill).
+  An earlier commit wrongly claimed a "−52 % prefill-warming" lever; a codex-council audit +
+  cache instrumentation caught it — **retracted**. The honest, useful negative:
+  *a hybrid/recurrent LLM defeats the standard KV-cache-warming latency trick.*
   (`runs/prefill_warm.json`)
 
 It is **not** the paper's end-to-end speech model, audio-conditioned trigger, joint
@@ -39,7 +43,7 @@ CUDA_VISIBLE_DEVICES=0  .venv-modular/bin/python audio/synth.py          # CRAG-
 CUDA_VISIBLE_DEVICES="" .venv-modular/bin/python scoring/audio_quality.py # ASR-churn gate
 CUDA_VISIBLE_DEVICES="" .venv-modular/bin/python audio/build_traces.py    # stabilized traces
 PYTHONPATH=. .venv/bin/python harness/run_three_arm.py       # 3-arm accuracy + latency
-python scoring/prefill_warm.py                               # the fast lever
+python scoring/prefill_warm.py                               # KV-reuse probe (honest negative)
 ```
 
 The underlying local RAG app (naive/stream services, frontend, CRAG Task-1 eval) is

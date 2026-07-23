@@ -1,16 +1,15 @@
 {
-  "n": 12,
-  "context_tokens_approx": 1800,
-  "cold_ttft_ms": {
-    "median": 695.8,
-    "mean": 687.4
+  "verdict": "NO KV prefix reuse for Qwen3.5-9B on this llama.cpp build -> no prefill-warming lever",
+  "n": 9,
+  "repeat_identical_prompt": {
+    "median_cache_n_cached_tokens": 23,
+    "median_prompt_n_evaluated_tokens": 1018,
+    "reuse_fraction": 0.022
   },
-  "warm_ttft_ms": {
-    "median": 331.3,
-    "mean": 332.4
+  "wall_clock_ttft_ms": {
+    "median_cold": 1101.0,
+    "median_repeat": 424.8,
+    "note": "Any cold-vs-repeat TTFT gap is a GPU-scheduling / first-after-idle artifact: the repeat still evaluates ~all prompt tokens (prompt_n above), i.e. the prefill compute is unchanged. It is NOT cache reuse and NOT a deployable speedup."
   },
-  "prefill_warm_saving_ms_median": 362.1,
-  "prefill_warm_saving_pct": 52.0,
-  "warm_wins": "12/12",
-  "note": "Warming the answer KV cache during speech reduces committed TTFT by the median above. This is the real fast lever on one A5000; the paper's speculative-retrieval prefetch was a measured null on this workload (see runs/three_arm.json). Benefit requires the query+evidence to stabilize before endpoint with lead to spare."
+  "why": "Qwen3.5-9B is hybrid/recurrent (GatedDeltaNet); its per-sequence recurrent state cannot be partially reused, so llama.cpp cannot reuse the KV prefix across requests. Corrected after codex-council round 3 caught the original over-attributed claim."
 }

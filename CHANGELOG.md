@@ -13,9 +13,14 @@ New work layered on the streamrag-local base (imported unchanged):
   the CRAG Task-1 judge. Hardened after an adversarial audit: clean service isolation,
   true-endpoint commit, counterbalanced arm order, per-query speculation telemetry, paired
   latency stats. Result: retrieval lifts truthfulness +0.42 → +0.92 (incorrect → 0).
-- **Honest latency finding**: the paper's speculative *retrieval* prefetch landed on 0/24
-  turns and is not a speedup here; the real lever is **answer-prefill / KV-cache warming**
-  (−362 ms / −52 % TTFT, 12/12 — `scoring/prefill_warm.py`). See `docs/AUDIO.md`.
+- **Honest latency finding (corrected after codex-council round 3):** the paper's
+  speculative *retrieval* prefetch landed on 0/24 turns and is not a speedup. An interim
+  commit claimed answer-prefill / KV-cache warming as a "−52 %" lever — **retracted**:
+  server instrumentation (`cache_n`/`prompt_n`) shows Qwen3.5-9B (hybrid/recurrent
+  GatedDeltaNet) gets **no KV prefix reuse** (`reuse_fraction ≈ 0.02`; identical prompts
+  fully re-prefill), so there is no prefill-warming lever; the earlier TTFT gap was a
+  GPU-scheduling artifact. Net: neither streaming trick reduces TTFT on this stack — a
+  useful negative about hybrid/recurrent LLMs. `scoring/prefill_warm.py`, `docs/AUDIO.md`.
 - **Fix**: `stream/trigger.py` used the OpenAI Responses API (not implemented by llama.cpp)
   → the stream service could not start in `LOCAL_MODE`; switched to Chat Completions +
   `enable_thinking=false`, mirroring the answer agent.

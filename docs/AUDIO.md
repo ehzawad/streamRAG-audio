@@ -95,18 +95,24 @@ Retrieval lifts truthfulness +0.42 → +0.92 and drives observed-incorrect label
   `accepted_ready_before_commit` on **0/24** turns; with counterbalanced arm order the
   streaming arm is in fact **+898 ms slower** (paired median) — trigger overhead with no
   prefetch payoff. Retrieval (~200 ms) is simply not the bottleneck.
-- The **dominant cost is the 9B answer prefill (TTFT).** The lever that attacks it is
-  **speculative answer-prefill / KV-cache warming** during speech: warm the answer prompt
-  (system + evidence + query) before endpoint so the committed request reuses the cached
-  prefix. Measured (`runs/prefill_warm.json`): **cold 696 ms → warm 331 ms, −362 ms
-  (−52 %), warm-faster on 12/12 trials.** Absolute saving varies with GPU state (210–362 ms
-  across runs); the direction does not. Benefit requires the query+evidence to stabilize
-  before endpoint with lead to spare — so it is largest on longer utterances.
+- The dominant cost is the **9B answer prefill (TTFT)** — and it is **not reducible by
+  cache-warming here.** An earlier version of this repo claimed a "−52 % TTFT from
+  answer-prefill / KV-cache warming" fast lever; **that was wrong and is retracted.**
+  Instrumenting the server (`cache_n` / `prompt_n`, `runs/prefill_warm.json`) shows the KV
+  prefix cache **does not reuse** for Qwen3.5-9B: even an *identical* prompt re-evaluates
+  ~all tokens (`reuse_fraction ≈ 0.02`). The cause is architectural — **Qwen3.5-9B is
+  hybrid/recurrent (GatedDeltaNet); its per-sequence recurrent state can't be partially
+  reused**, so llama.cpp rolls the reusable prefix back to ~0. The cold-vs-repeat wall-clock
+  TTFT gap I first measured was **GPU scheduling / first-after-idle warmup** (identical
+  prefill compute both times), not cache reuse, and not deployable.
 
-**Architecture conclusion:** keep the local streaming-RAG for **accuracy**; the **fast**
-path is prefill-warming, not retrieval-prefetch. The speculative-retrieval coordinator is
-imported and exercised (and its correctness gate is what makes it safe), but on this
-workload it is honestly reported as latency-neutral-to-negative, not a speedup.
+**Architecture conclusion:** keep the local streaming-RAG for **accuracy** (that is the real
+win). On latency, be honest: on this stack, **neither** speculative retrieval-prefetch
+**nor** answer-prefill warming reduces TTFT — the system runs at the 9B's cold
+prefill+decode latency. The genuinely useful (negative) finding: **a hybrid/recurrent LLM
+defeats the standard KV-cache-warming latency trick.** The speculative-retrieval coordinator
+is imported and exercised (its commit gate keeps it safe), but reported here as
+latency-neutral-to-negative, not a speedup.
 
 ## Honest ceiling
 
