@@ -13,7 +13,7 @@
 # its own .venv-qwen-audio); it is not pinned here because it is not co-resident
 # with this ASR/eval stack.
 
-torch==2.6.0
+torch==2.13.0
 faster-whisper==1.2.1      # streaming ASR: 500 ms rolling partial hypotheses (CPU int8)
 jiwer>=3.0                 # WER / entity-WER of synthetic audio vs gold text
 soundfile>=0.12            # deterministic wav I/O
