@@ -782,7 +782,7 @@ def summarize(
         run_integrity=run_integrity,
     )
     return {
-        "schema_version": 4,
+        "schema_version": 5,
         "scorer_sha256": sha256_file(Path(__file__).resolve()),
         "metric_notes": {
             "latency_delta_sign": "negative stream-minus-naive values favor StreamRAG",

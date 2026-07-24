@@ -103,7 +103,7 @@ class StreamRagPath:
             retrieval_failures=metrics.retrieval_failures,
             stale_discards=metrics.stale_discards,
             trigger_cancellations=metrics.trigger_cancellations,
-            unpriced_trigger_cancellations=metrics.unpriced_trigger_cancellations,
+            trigger_cancellations_without_usage=metrics.trigger_cancellations_without_usage,
             retrieval_cancellations=metrics.retrieval_cancellations,
             evidence_reuses=metrics.evidence_reuses,
             evidence_revalidations=metrics.evidence_revalidations,

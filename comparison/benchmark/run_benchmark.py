@@ -432,7 +432,7 @@ async def replay_path(
                 answer_started_sources = list(event.get("sources") or [])
             elif event["type"] == "answer.completed":
                 output = {
-                    "schema_version": 3,
+                    "schema_version": 4,
                     "id": row["id"],
                     "repetition": repetition,
                     "path": event["path"],
@@ -588,7 +588,7 @@ def failure_output(
 ) -> dict[str, Any]:
     timed_out = isinstance(error, TimeoutError)
     return {
-        "schema_version": 3,
+        "schema_version": 4,
         "id": row["id"],
         "repetition": repetition,
         "path": path,

@@ -32,5 +32,5 @@ Everything is bound to `data/crag_eval` (`test_queries.jsonl` /
 `test_gold.jsonl`, verified via `checksums.sha256`). `make benchmark` writes
 predictions to `comparison/benchmark/results/predictions.jsonl`; `make score`
 writes the report to `summary.json`. The report compares common latency,
-correctness, reliability, usage, and cost metrics; StreamRAG scheduling
+correctness, reliability, and usage metrics; StreamRAG scheduling
 diagnostics remain path-specific.

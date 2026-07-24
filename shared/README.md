@@ -8,7 +8,7 @@ It owns:
 - API lifecycle, events, and persistence;
 - settings, dataset checks, and reproducibility fingerprints;
 - CRAG checksums, chunking, embeddings, index readiness, and search;
-- grounded answers, local-corpus tooling, chat memory, and usage/cost accounting;
+- grounded answers, local-corpus tooling, chat memory, and usage accounting;
 - schemas and the telemetry contract.
 
 Naive RAG owns committed-text retrieval. StreamRAG owns draft analysis,

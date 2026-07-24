@@ -137,7 +137,7 @@ class StreamMetrics:
     retrieval_timeouts: int = 0
     retrieval_failures: int = 0
     trigger_cancellations: int = 0
-    unpriced_trigger_cancellations: int = 0
+    trigger_cancellations_without_usage: int = 0
     retrieval_cancellations: int = 0
     evidence_reuses: int = 0
     evidence_revalidations: int = 0
@@ -944,7 +944,7 @@ class StreamCoordinator:
             return
         self.metrics.trigger_cancellations += 1
         if state == "pending":
-            self.metrics.unpriced_trigger_cancellations += 1
+            self.metrics.trigger_cancellations_without_usage += 1
         self._trigger_call_states[task] = "cancel_requested"
         task.cancel()
 

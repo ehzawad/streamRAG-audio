@@ -111,7 +111,7 @@ const SERVICE_URLS: Record<AnswerPath, string> = {
   stream: "/api/stream",
 };
 
-export const METRICS_CONTRACT_VERSION = 1;
+export const METRICS_CONTRACT_VERSION = 2;
 const TOPOLOGY_REQUEST_TIMEOUT_MS = 5_000;
 
 const COMMON_IDENTITY_FIELDS = [

@@ -91,7 +91,7 @@ def grounded_turn_input(
 
 
 async def execute_local_crag_search(deps: AgentDeps, query: str) -> str:
-    """Execute the bounded local tool with attempt and cost-integrity guards."""
+    """Execute the bounded local tool with attempt and usage-integrity guards."""
     started = time.perf_counter()
     deps.tool_attempts += 1
     trace = {
@@ -99,7 +99,7 @@ async def execute_local_crag_search(deps: AgentDeps, query: str) -> str:
         "query": query.strip(),
         "status": "started",
         "attempt": deps.tool_attempts,
-        "accounting_complete": False,
+        "usage_complete": False,
         "elapsed_ms": 0.0,
         "query_vector_ms": 0.0,
         "ann_ms": 0.0,
@@ -111,7 +111,7 @@ async def execute_local_crag_search(deps: AgentDeps, query: str) -> str:
     if deps.tool_attempts > 1:
         trace.update(
             status="rejected_attempt_limit",
-            accounting_complete=True,
+            usage_complete=True,
             elapsed_ms=(time.perf_counter() - started) * 1000,
         )
         raise RuntimeError("search_local_crag may be attempted at most once per answer")
@@ -137,7 +137,7 @@ async def execute_local_crag_search(deps: AgentDeps, query: str) -> str:
     trace.update(
         {
             "status": "completed",
-            "accounting_complete": True,
+            "usage_complete": True,
             "query": result.query,
             "elapsed_ms": result.elapsed_ms,
             "query_vector_ms": result.query_vector_ms,
@@ -317,8 +317,8 @@ class GroundedAgent:
                 "type": "agent.persisted",
                 "usage": compression.usage,
                 "compression_calls": memory.compression_calls,
-                "summary_accounting_complete": compression.accounting_complete,
-                "unpriced_summary_timeout_calls": compression.unpriced_timeout_calls,
+                "summary_usage_complete": compression.usage_complete,
+                "summary_timeout_calls_without_usage": compression.timeout_calls_without_usage,
             }
 
     async def _save_despite_cancellation(

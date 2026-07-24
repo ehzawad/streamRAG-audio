@@ -233,8 +233,8 @@ def deduplicate_documents(documents: Iterable[SourceDocument]) -> list[SourceDoc
 
 def chunk_documents(
     documents: Iterable[SourceDocument],
-    chunk_tokens: int = 400,
-    overlap_tokens: int = 50,
+    chunk_tokens: int = 256,
+    overlap_tokens: int = 32,
 ) -> list[Chunk]:
     if chunk_tokens <= 0:
         raise ValueError("chunk size must be positive")

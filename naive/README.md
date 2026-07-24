@@ -27,5 +27,5 @@ The root returns service metadata, and the API schema is at
 before the dataset review is complete. Use the separate `frontend/` for chat.
 
 Naive RAG reports the common answer, citation, latency, reliability, usage,
-retrieval, accounting, and observed-cost metrics. It does not emit StreamRAG
+retrieval, and usage-accounting metrics. It does not emit StreamRAG
 scheduling diagnostics.

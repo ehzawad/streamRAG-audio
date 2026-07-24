@@ -7,7 +7,9 @@ from typing import Protocol
 from shared.models import InputSnapshot, SearchResult, Usage
 
 EventSink = Callable[[dict], Awaitable[None]]
-METRICS_CONTRACT_VERSION = 1
+# v2: removed dollar-cost accounting (estimated_cost_usd) and renamed the
+# usage-completeness fields off cost vocabulary in the metrics-log record.
+METRICS_CONTRACT_VERSION = 2
 
 
 @dataclass
@@ -32,7 +34,7 @@ class PathTelemetry:
     retrieval_failures: int = 0
     stale_discards: int = 0
     trigger_cancellations: int = 0
-    unpriced_trigger_cancellations: int = 0
+    trigger_cancellations_without_usage: int = 0
     retrieval_cancellations: int = 0
     evidence_reuses: int = 0
     evidence_revalidations: int = 0

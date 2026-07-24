@@ -534,8 +534,8 @@ class RagRuntime:
         tool_attempt_count = 0
         tool_wall_ms = 0.0
         compression_calls: int | None = None
-        summary_accounting_complete = False
-        unpriced_summary_timeout_calls = 0
+        summary_usage_complete = False
+        summary_timeout_calls_without_usage = 0
         generation_started_ms = time.perf_counter() * 1000
         answer_completed_ms: float | None = None
         persistence_started_ms: float | None = None
@@ -565,7 +565,7 @@ class RagRuntime:
             known_usage.add(agent_usage)
             await self.logger.write(
                 {
-                    "schema_version": 2,
+                    "schema_version": 3,
                     "status": "failed",
                     "run_id": run_id,
                     "turn_id": turn_id,
@@ -609,7 +609,9 @@ class RagRuntime:
                         "failures": retrieval.controller_failures,
                         "elapsed_ms": retrieval.controller_elapsed_ms,
                         "cancellations": retrieval.trigger_cancellations,
-                        "unpriced_cancellations": retrieval.unpriced_trigger_cancellations,
+                        "cancellations_without_usage": (
+                            retrieval.trigger_cancellations_without_usage
+                        ),
                     },
                     "reuse": {
                         "mode": reuse_mode,
@@ -623,7 +625,7 @@ class RagRuntime:
                         "status": "not_started",
                         "elapsed_ms": None,
                         "compression_calls": None,
-                        "summary_accounting_complete": None,
+                        "summary_usage_complete": None,
                     },
                     "tool_traces": tool_traces,
                     "usage": asdict(known_usage),
@@ -734,11 +736,11 @@ class RagRuntime:
                         elif event["type"] == "agent.persisted":
                             persistence_usage = event["usage"]
                             compression_calls = int(event["compression_calls"])
-                            summary_accounting_complete = (
-                                event.get("summary_accounting_complete") is True
+                            summary_usage_complete = (
+                                event.get("summary_usage_complete") is True
                             )
-                            unpriced_summary_timeout_calls = int(
-                                event.get("unpriced_summary_timeout_calls") or 0
+                            summary_timeout_calls_without_usage = int(
+                                event.get("summary_timeout_calls_without_usage") or 0
                             )
                             persistence_status = "completed"
                         else:
@@ -803,7 +805,7 @@ class RagRuntime:
             "local_tool_wall_ms": tool_wall_ms,
         }
         record = {
-            "schema_version": 2,
+            "schema_version": 3,
             "run_id": run_id,
             "turn_id": turn_id,
             "session_id": request.session_id,
@@ -842,7 +844,7 @@ class RagRuntime:
                 "failures": retrieval.controller_failures,
                 "elapsed_ms": retrieval.controller_elapsed_ms,
                 "cancellations": retrieval.trigger_cancellations,
-                "unpriced_cancellations": retrieval.unpriced_trigger_cancellations,
+                "cancellations_without_usage": retrieval.trigger_cancellations_without_usage,
             },
             "reuse": {
                 "mode": reuse_mode,
@@ -856,8 +858,8 @@ class RagRuntime:
                 "status": persistence_status,
                 "elapsed_ms": timing["post_answer_persistence_ms"],
                 "compression_calls": compression_calls,
-                "summary_accounting_complete": summary_accounting_complete,
-                "unpriced_summary_timeout_calls": unpriced_summary_timeout_calls,
+                "summary_usage_complete": summary_usage_complete,
+                "summary_timeout_calls_without_usage": summary_timeout_calls_without_usage,
             },
             "tool_traces": tool_traces,
             "usage": asdict(usage),

@@ -40,8 +40,8 @@ class CompressionResult:
     memory: SessionMemory
     usage: Usage
     compressed: bool
-    accounting_complete: bool = True
-    unpriced_timeout_calls: int = 0
+    usage_complete: bool = True
+    timeout_calls_without_usage: int = 0
 
 
 class ConversationSummarySkill:
@@ -104,8 +104,8 @@ class ConversationSummarySkill:
                 memory,
                 Usage(),
                 False,
-                accounting_complete=False,
-                unpriced_timeout_calls=1,
+                usage_complete=False,
+                timeout_calls_without_usage=1,
             )
         compacted = SessionMemory(
             messages=recent_messages,
